@@ -9,9 +9,7 @@ const fs = require('fs');
 // Import All Constants 
 const DEFAULT_DURATION = 60;
 const DEFAULT_DURATION_MILLIS = DEFAULT_DURATION * 1000;
-const apiEndpoint = "http://localhost:3000/"
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+const apiEndpoint = "http://localhost:8000/"
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -25,7 +23,8 @@ function activate(context) {
 		let lastSendingData = 0;
 		let lasTimeDataSent;
 		let fileDuration = [];
-
+	    let statusBar =   vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+		
 	// Initalise Session Data
 	let sessionSummaryData = {
 		currentDayMinutes: 0,
@@ -35,16 +34,7 @@ function activate(context) {
 }
 
 
-// Clear Session Data
-const  clearCodingTime  = () => {
-	sessionSummaryData = {
-		currentDayMinutes: 0,
-		currentDayMinutesTime: 0
-	};
 
-
-
-}
 const getCodingTime = () => {
 let date = new Date();
 date = new Date(date.getTime() - DEFAULT_DURATION_MILLIS);
@@ -92,30 +82,23 @@ else if (min === 60) {
 return str;
 }
 
-		// Status Bar
-			// Status Bar To Show Coding Time
-			let statusBar =   vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-		
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "codabits" is now active!');
+	
 
 
 
+/*
 	function getDateFormat(date) {
 		const dd = new Date(date).getDate();
 		const mm = new Date(date).getMonth() + 1;
 		const yy = new Date(date).getFullYear();
 		return `${mm}-${dd}-${yy}`
 	}
-
+*/
 		const initialise = () => {
 			statusBar.text = 'Codabits Initalizing ...'
 			statusBar.show();
-			if(context.globalState.get('apiKey') === undefined ||  context.globalState.get('apiKey') === null) {
-				getApikey();
-			}
+			console.log(context.globalState.get('apiKey') )
+			
 		
 
 		}
@@ -149,37 +132,8 @@ return str;
 				  getApikey()
 			  }
 			 })
-/*
-				Duration.findOneAndUpdate({apiKey: API}, { $set: { vs_code: true }})
-		
-				.then((result) => {
-					if(result !== null) {
-						console.log(API);
-						// Set API Key to Global State on Vs Code 
-						 context.globalState.update('apiKey', API);
-						 console.log(result)
 
-
-						// Display a message box to the user when API Key is valid
-						vscode.window.showInformationMessage('Congratulations, Codabits is now active!');
-					}
-					else {
-						vscode.window.showInformationMessage('Oops, API Key is not valid!');
-
-					}
-			
-				})
-				.catch(err => {
-					console.log(err);
-		
-				})
-			  }
-			
-		
-		
-				  }) */
-				}
-
+		  }
 
 				// Check API Is Valid 
 				function checkApi()  {
@@ -319,7 +273,6 @@ const readJsonFile = () => {
 				let lastTimeSaved;
 				getCodingTime()
 				let lastFileNameChanged = lastFileName
-			//	console.log(`Last File Name ${lastFileNameChanged} and New File Name is ${fileName}`)
 			
 
 		
@@ -343,25 +296,19 @@ const readJsonFile = () => {
 				// Check if array is not empty and fileName and lastFilename are the same
 				if(fileDuration.length > 0 && checkLastSaved()) {
 	
-				//	console.log(checkLastSaved())
-				//	console.log('Rah Array Fih Maydar o rah deja rah fileName Kayn farray')
 					fileDuration.forEach(el => {
 					
 
 			
 						if(el.fileName === lastFileNameChanged) {
-							//console.log(el);
 
-						//	console.log(`We're working on updating exciting files ... ${el.fileName === lastFileNameChanged}`)
 							const pastDurations = el.duration;
 							const newDurations = pastDurations + 1;
 							el.duration = newDurations
-							el.created_at= getDateFormat(new Date());
+							el.created_at=new Date().toISOString();
 							lastFileName = fileName;
 							lastTimeSaved = Date.now()
-						//	console.log(el.duration);
-						//	console.log(el.created_at);
-						//	console.log(el);
+					
 						}
 
 			
@@ -383,7 +330,7 @@ const readJsonFile = () => {
 					fileDuration.push({
 						fileName,
 						duration:1,
-						created_at: getDateFormat(new Date()), 
+						created_at: new Date().toISOString(), 
 						projectName, 
 						language
 					})
@@ -400,7 +347,7 @@ const readJsonFile = () => {
 					fileDuration.push({
 						fileName,
 						duration:1,
-						created_at:  getDateFormat(new Date()), 
+						created_at: new Date().toISOString(), 
 						projectName, 
 						language
 					})
@@ -457,7 +404,6 @@ const readJsonFile = () => {
 
 
 	
-	//	vscode.env.openExternal(vscode.Uri.parse('https://twitter.com'));
 
 	
 		 //
@@ -475,12 +421,16 @@ const sendData = (fileDuration) => {
 	const apiKey = context.globalState.get('apiKey');
 
 	
-	let url = `${apiEndpoint}/duration/${apiKey}`
+	let url = `${apiEndpoint}duration/${apiKey}`;
+	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 	let data = {
 		fileDuration: fileDuration,
-		timeZone:  Intl.DateTimeFormat().resolvedOptions().timeZone
+		timeZone
 	}
+	console.log(JSON.stringify(data))
+	console.log(url)
+
 		// @ts-ignore
 	fetch(url, {
 		method: 'POST',
@@ -488,18 +438,18 @@ const sendData = (fileDuration) => {
         headers: { 'Content-Type': 'application/json' }
 
 	  }).then(response => {
-		lastSendingData = Date.now();
 		return response.json()
 	  })
 	  .then(data => {
 		  console.log(data);
+		  lastSendingData = Date.now();
 		  statusBar.tooltip = `We send Data to Our Server in ${lastSendingData}`;
 
 
 	  })
 	  .catch(err => {
 		  console.log(err)
-		  console.log(`Server Is Up ${serverIsDown()}`)
+		 serverIsDown();
 	  })
 	
 	  
@@ -519,16 +469,4 @@ module.exports = {
 	activate,
 	deactivate
 }
-
-
-
-
-
-
-/*
-
-
-
-*/
-
 
