@@ -30,6 +30,6 @@ Initial Realease
 ### For more information
 
 * [Codabit Source Code](http://code.visualstudio.com/docs/languages/markdown)
-* [Ilias Hadd Twitter](https://twitter.com/IliasHaddad3)
+* [Maker Twitter](https://twitter.com/IliasHaddad3)
 
 **Enjoy!**
