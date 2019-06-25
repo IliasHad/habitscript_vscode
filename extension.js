@@ -362,14 +362,14 @@ const readJsonFile = () => {
 			//	console.log(fileDuration);
 
 			console.log(new Date(lastTimeSaved).toISOString())
-			console.log(new Date(lastSendingData).toISOString())
-		
-				if(enoughTimePassed(lastTimeSaved)) {
-					sendData(fileDuration);
-				
-					console.log(`We are sending Data Now ${new Date().getHours()} hr ${new Date().getMinutes()} min`)
-				
-				}
+			console.log(new Date(lastSendingData).toISOString());
+			
+			if(lastSendingData + 12000 < lastTimeSaved) {
+				sendData(fileDuration);
+			
+				console.log(`We are sending Data Now ${new Date().getHours()} hr ${new Date().getMinutes()} min`)
+			
+			}
 			
 			
 			
@@ -406,12 +406,7 @@ const readJsonFile = () => {
 	
 
 	
-		 //
-		 const enoughTimePassed = (time) =>{
-
-			return  (lastSendingData + 12000) < time;
-		  }
-		
+	
 	
 
 
@@ -419,6 +414,7 @@ const readJsonFile = () => {
 
 const sendData = (fileDuration) => {
 	const apiKey = context.globalState.get('apiKey');
+	lastSendingData = Date.now();
 
 	
 	let url = `${apiEndpoint}duration/${apiKey}`;
@@ -431,6 +427,8 @@ const sendData = (fileDuration) => {
 	console.log(JSON.stringify(data))
 	console.log(url)
 
+
+	
 		// @ts-ignore
 	fetch(url, {
 		method: 'POST',
@@ -442,8 +440,7 @@ const sendData = (fileDuration) => {
 	  })
 	  .then(data => {
 		  console.log(data);
-		  lastSendingData = Date.now();
-		  statusBar.tooltip = `We send Data to Our Server in ${lastSendingData}`;
+		  statusBar.tooltip = `We send Data to Our Server in ${new Date(lastSendingData).toISOString()}`;
 
 
 	  })
