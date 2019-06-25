@@ -2,7 +2,7 @@
 	"name": "codabit",
 	"displayName": "Codabit",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.1",
+	"version": "1.0.14",
 	"publisher": "iliashaddad",	
 	"keywords": ["track coding time", "coding time", "productivity", "challenges"],
 	"engines": {

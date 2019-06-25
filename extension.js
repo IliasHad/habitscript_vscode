@@ -135,15 +135,14 @@ return str;
 			 .then( (API) =>  {
 			
 		
-			  if(API !== null || API !== undefined) { 
+			  if(API !== null || API !== undefined ) { 
 
 				context.globalState.update('apiKey', API);
-				console.log(API)
-
-				checkApi();
-
-			  }
+				checkApi()
+		  }
 			  else {
+				vscode.window.showInformationMessage('Oops, API Key is not valid!');
+
 				  getApikey()
 			  }
 			 })
@@ -200,12 +199,16 @@ return str;
 	})
 	.then(response=> {
 	
-		if(response.status === 200) {
+		return response.json()
+	})
+	.then(resData => {
+		if(resData !== undefined ){
 
-			isValid = true
+			vscode.window.showInformationMessage('Congratulations, Codabits is now active!');
 		}
 		else {
-			isValid = false
+			vscode.window.showInformationMessage('Oops, API Key is not valid!');
+
 			getApikey()
 		}
 	})
