@@ -30,5 +30,15 @@
 	},
 	"dependencies": {
 		"node-fetch": "^2.6.0"
-	}
+	},
+	"bugs": {
+		"url": "https://github.com/IliasHad/codabit_vscode/issues",
+		"email": "iliasshaddad2016@gmail.com"
+	  },
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/IliasHad/codabit_vscode.git"
+	  },
+	  "homepage": "https://github.com/IliasHad/codabit_vscode/blob/master/README.md"
+	
 }
