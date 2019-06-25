@@ -1,6 +1,6 @@
-# codabits README
+# Codabit Vs Code Extension
 
-Make coding a Habit
+Track Your Time Spent On Coding and Make Coding a Habit
 
 ## Features
 
