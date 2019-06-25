@@ -113,7 +113,10 @@ return str;
 		const initialise = () => {
 			statusBar.text = 'Codabits Initalizing ...'
 			statusBar.show();
-			getApikey();
+			if(context.globalState.get('apiKey') === undefined ||  context.globalState.get('apiKey') === null) {
+				getApikey();
+			}
+		
 
 		}
 		initialise();
@@ -202,6 +205,7 @@ return str;
 		return response.json()
 	})
 	.then(resData => {
+		console.log(resData)
 		if(resData !== undefined ){
 
 			vscode.window.showInformationMessage('Congratulations, Codabits is now active!');
