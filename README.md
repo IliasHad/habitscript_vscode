@@ -15,19 +15,14 @@ Offline tracking time
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
+You need API Key and you can get it from  [Codabit Setttings](https://twitter.com/IliasHaddad3)
 
 
 
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+
 
 ### 1.0.0
 
@@ -39,7 +34,7 @@ Initial Realease
 
 ### For more information
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+* [Codabit Source Code](http://code.visualstudio.com/docs/languages/markdown)
+* [Ilias Hadd Twitter](https://twitter.com/IliasHaddad3)
 
 **Enjoy!**
