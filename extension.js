@@ -422,7 +422,7 @@ const sendData = (fileDuration) => {
 		  console.log(data);
 		  lastSendingData = Date.now();
 
-		  statusBar.tooltip = `We send Data to Our Server in ${new Date(lastSendingData).toISOString()}`;
+		  statusBar.tooltip = `We send Data to Our Server in ${new Date(lastSendingData)}`;
 
 
 	  })
