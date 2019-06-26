@@ -2,7 +2,7 @@
 	"name": "codabit",
 	"displayName": "Codabit",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.18",
+	"version": "1.0.19",
 	"publisher": "iliashaddad",	
 	"keywords": ["track coding time", "coding time", "productivity", "challenges"],
 	"engines": {
@@ -40,6 +40,7 @@
 		"type": "git",
 		"url": "https://github.com/IliasHad/codabit_vscode.git"
 	  },
-	  "homepage": "https://github.com/IliasHad/codabit_vscode/blob/master/README.md"
-	
+	  "homepage": "https://github.com/IliasHad/codabit_vscode/blob/master/README.md",
+	  "icon": "img/logo.png"
+
 }

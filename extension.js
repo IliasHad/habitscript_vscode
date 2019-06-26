@@ -406,7 +406,6 @@ const readJsonFile = () => {
 
 const sendData = (fileDuration) => {
 	const apiKey = context.globalState.get('apiKey');
-	lastSendingData = Date.now();
 
 	
 	let url = `${apiEndpoint}duration/${apiKey}`;
@@ -432,6 +431,8 @@ const sendData = (fileDuration) => {
 	  })
 	  .then(data => {
 		  console.log(data);
+		  lastSendingData = Date.now();
+
 		  statusBar.tooltip = `We send Data to Our Server in ${new Date(lastSendingData).toISOString()}`;
 
 
