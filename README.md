@@ -1,4 +1,4 @@
-# Codabit Vs Code Extension
+# HabitScript Vs Code Extension
 
 Track Your Time Spent On Coding and Make Coding a Habit
 
@@ -11,7 +11,7 @@ Offline tracking time
 
 ## Requirements
 
-You need API Key and you can get it from  [Codabit Setttings](https://twitter.com/IliasHaddad3)
+You need API Key and you can get it from  [HabitScript Setttings](https://twitter.com/IliasHaddad3)
 
 
 
@@ -29,7 +29,7 @@ Initial Realease
 
 ### For more information
 
-* [Codabit Source Code](http://code.visualstudio.com/docs/languages/markdown)
+* [HabitScript Source Code](http://code.visualstudio.com/docs/languages/markdown)
 * [Maker Twitter](https://twitter.com/IliasHaddad3)
 
 **Enjoy!**

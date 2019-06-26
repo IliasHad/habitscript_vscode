@@ -1,8 +1,8 @@
 {
-	"name": "codabit",
-	"displayName": "Codabit",
+	"name": "habitscript",
+	"displayName": "HabitScript",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.22",
+	"version": "1.0.25",
 	"publisher": "iliashaddad",	
 	"keywords": ["track coding time", "coding time", "productivity", "challenges"],
 	"engines": {

@@ -350,14 +350,14 @@ const readJsonFile = () => {
 			console.log(new Date(lastTimeSaved).toISOString())
 			console.log(new Date(lastSendingData).toISOString());
 			
+			setTimeout(() => {
 			
-			if(lastSendingData + 120000 < lastTimeSaved) {
-				vscode.window.showInformationMessage("We Sending Data");
+					vscode.window.showInformationMessage("We Sending Data");
+	
+					sendData(fileDuration);
+			
+			},120000)
 
-				sendData(fileDuration);
-			
-			
-			}
 			
 			
 			
