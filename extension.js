@@ -364,7 +364,7 @@ const readJsonFile = () => {
 			console.log(new Date(lastTimeSaved).toISOString())
 			console.log(new Date(lastSendingData).toISOString());
 			
-			if(lastSendingData + 12000 < lastTimeSaved) {
+			if(lastSendingData + 120000 < lastTimeSaved) {
 				sendData(fileDuration);
 			
 				console.log(`We are sending Data Now ${new Date().getHours()} hr ${new Date().getMinutes()} min`)
@@ -401,14 +401,6 @@ const readJsonFile = () => {
 			
 
 		  });
-
-
-	
-
-	
-	
-	
-
 
 
 
@@ -466,4 +458,8 @@ module.exports = {
 	activate,
 	deactivate
 }
+
+
+
+
 
