@@ -20,6 +20,7 @@ function activate(context) {
 		// Gloabl Variables
 		let codingTime = 0 ;
 		let lastFileName;
+		let todayCodingTime;
 		let lastSendingData = 0;
 		let lasTimeDataSent;
 		let fileDuration = [];
@@ -51,7 +52,7 @@ incrementSessionSummaryData(1); //secondes
 
 const  incrementSessionSummaryData = (secondes) =>{
 	sessionSummaryData.currentDayMinutes += secondes;
-	statusBar.text =  `🙌 ${humanizeMinutes(sessionSummaryData.currentDayMinutes)} `;
+	statusBar.text =  `🙌 ${humanizeMinutes(getTodayCodingTime())} `;
 }
 
 
@@ -86,14 +87,14 @@ return str;
 
 
 
-/*
+
 	function getDateFormat(date) {
 		const dd = new Date(date).getDate();
 		const mm = new Date(date).getMonth() + 1;
 		const yy = new Date(date).getFullYear();
 		return `${mm}-${dd}-${yy}`
 	}
-*/
+
 		const initialise = () => {
 			statusBar.text = 'Codabits Initalizing ...'
 			statusBar.show();
@@ -187,7 +188,15 @@ function serverIsDown() {
 }
 
 
+function getTodayCodingTime() {
 
+	let todayTime;
+	fileDuration.forEach(el => {
+		if(getDateFormat(el.created_at) === getDateFormat(new Date().toISOString()))
+		todayTime = el.duration + el.duration
+	})
+	return todayTime
+}
 
 // When Connection Isn't Available we Store Data in JSON File
 
@@ -205,27 +214,6 @@ const readJsonFile = () => {
 	// @ts-ignore
 	let dataObj = JSON.parse(dataJSON);  
 }
-		// Display Coding Time in Status Bar
-	    const showCodingTime = () => {
-			if(codingTime < 59) {
-				console.log(`${codingTime} secondes`);
-				statusBar.text = `${codingTime} secondes`;
-			}
-			if(codingTime > 59) {
-				var codingTimeInMinutes = Math.floor(codingTime / 60);
-				console.log(codingTimeInMinutes);
-				statusBar.text = `${codingTimeInMinutes} mins`;
-
-			}
-			else if(codingTime > 3600) {
-				var codingTimeInMinutes = Math.floor(codingTime / 60);
-				var  codingTimeInHours = Math.floor(codingTimeInMinutes / 60);
-
-				console.log(`${codingTimeInHours}hr ${codingTimeInMinutes} mins`);
-				statusBar.text = `${codingTimeInHours}hr ${codingTimeInMinutes} mins`;
-			}
-
-		}
 
 		// Get Project Name
 		const getProjectName = () => {
@@ -363,6 +351,7 @@ const readJsonFile = () => {
 
 			console.log(new Date(lastTimeSaved).toISOString())
 			console.log(new Date(lastSendingData).toISOString());
+			
 			
 			if(lastSendingData + 120000 < lastTimeSaved) {
 				sendData(fileDuration);
