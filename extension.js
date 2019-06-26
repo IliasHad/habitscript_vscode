@@ -125,7 +125,7 @@ return str;
 			  if(API !== null || API !== undefined ) { 
 
 				context.globalState.update('apiKey', API);
-				checkApi()
+				//checkApi()
 		  }
 			  else {
 				vscode.window.showInformationMessage('Oops, API Key is not valid!');
@@ -250,9 +250,7 @@ const readJsonFile = () => {
 		const onEvent = (isChanged, doc) => {
 	
 
-			if(lastSendingData === 0) {
-				lastSendingData = Date.now();
-			}
+			
 
 			if(isChanged) {
 				const fileName = getFileName(doc);
@@ -354,9 +352,10 @@ const readJsonFile = () => {
 			
 			
 			if(lastSendingData + 120000 < lastTimeSaved) {
+				vscode.window.showInformationMessage("We Sending Data");
+
 				sendData(fileDuration);
 			
-				console.log(`We are sending Data Now ${new Date().getHours()} hr ${new Date().getMinutes()} min`)
 			
 			}
 			
@@ -372,11 +371,6 @@ const readJsonFile = () => {
 				
 			}
 			
-
-			
-		
-		
-		
 
 	// When You Type Anything
 			vscode.workspace.onDidChangeTextDocument((doc) => {
@@ -400,24 +394,31 @@ const sendData = (fileDuration) => {
 	let url = `${apiEndpoint}duration/${apiKey}`;
 	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-	let data = {
-		fileDuration: fileDuration,
-		timeZone
-	}
-	console.log(JSON.stringify(data))
+	
 	console.log(url)
 
 
+	async function sendPost() {
 	
 		// @ts-ignore
-	fetch(url, {
-		method: 'POST',
-		body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
+  let response = await fetch(url, {
+	method: 'POST',
+	// @ts-ignore
+	body: JSON.stringify({
+		fileDuration: fileDuration,
+		timeZone
+	}),
+	headers: { 'Content-Type': 'application/json' }
 
-	  }).then(response => {
-		return response.json()
-	  })
+  });
+  let data = await response.json()
+  return data;
+}
+
+
+sendPost()
+
+	
 	  .then(data => {
 		  console.log(data);
 		  lastSendingData = Date.now();
@@ -431,6 +432,7 @@ const sendData = (fileDuration) => {
 		 serverIsDown();
 	  })
 	
+	  
 	  
 
 
@@ -448,8 +450,4 @@ module.exports = {
 	activate,
 	deactivate
 }
-
-
-
-
 
