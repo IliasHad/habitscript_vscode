@@ -14,7 +14,6 @@ Offline tracking time
 You need API Key and you can get it from  [HabitScript Setttings](https://twitter.com/IliasHaddad3)
 
 
-
 ## Release Notes
 
 
