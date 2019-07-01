@@ -18,7 +18,7 @@ function activate(context) {
 		// Gloabl Variables
 		let codingTime = 0 ;
 		let lastFileName;
-		let todayCodingTime;
+		let todayCodingTime = 0;
 		let lastSendingData = 0;
 		let lasTimeDataSent = 0;
 		let lastTimeSaved = 0 
@@ -76,6 +76,8 @@ return str;
 			statusBar.text = 'Codabits Initalizing ...'
 			statusBar.show();
 			console.log(context.globalState.get('apiKey') )
+			getTodayCodingTime()
+			showTodayTime()
 			
 		
 
@@ -102,7 +104,7 @@ return str;
 			  if(API !== null || API !== undefined ) { 
 
 				context.globalState.update('apiKey', API);
-				//checkApi()
+				checkApi()
 		  }
 			  else {
 				vscode.window.showInformationMessage('Oops, API Key is not valid!');
@@ -167,12 +169,12 @@ function serverIsDown() {
 
 function getTodayCodingTime() {
 
-	let todayTime;
+
 	fileDuration.forEach(el => {
 		if(getDateFormat(el.created_at) === getDateFormat(new Date().toISOString()))
-		todayTime = el.duration + el.duration
+		todayCodingTime = el.duration + el.duration
 	})
-	return todayTime
+	return todayCodingTime
 }
 
 // When Connection Isn't Available we Store Data in JSON File
@@ -222,10 +224,15 @@ const readJsonFile = () => {
 			return fileName;
 		}
 
+		function showTodayTime() {
+			statusBar.text = `Today ${humanizeMinutes(todayCodingTime)}`
+		}
+
 
 	    // When You Write Code
 		const onEvent = (isChanged, doc) => {
 		
+			showTodayTime()
 			if(lastTimeSaved === 0) {
 				lastTimeSaved = Date.now()
 			}
@@ -267,7 +274,7 @@ const readJsonFile = () => {
 						if(el.fileName === lastFileNameChanged) {
 
 							const pastDurations = el.duration;
-							const newDurations = pastDurations + (lastTimeSaved - Date.now());
+							const newDurations = pastDurations + ((lastTimeSaved - Date.now()) / 1000);
 							el.duration = newDurations
 							el.created_at=new Date().toISOString();
 							lastFileName = fileName;
@@ -293,7 +300,7 @@ const readJsonFile = () => {
 				
 					fileDuration.push({
 						fileName,
-						duration:lastTimeSaved - Date.now(),
+						duration:(lastTimeSaved - Date.now()) / 1000 ,
 						created_at: new Date().toISOString(), 
 						projectName, 
 						language
@@ -309,7 +316,7 @@ const readJsonFile = () => {
 
 					fileDuration.push({
 						fileName,
-						duration:1,
+						duration:(lastTimeSaved - Date.now()) / 1000,
 						created_at: new Date().toISOString(), 
 						projectName, 
 						language
