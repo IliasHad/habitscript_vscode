@@ -24,7 +24,9 @@ You need API Key and you can get it from  [HabitScript Setttings](https://habit-
 
 Initial Realease
 
+### 1.0.36
 
+Fix tracking time issues
 -----------------------------------------------------------------------------------------------------------
 
 ### For more information

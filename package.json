@@ -2,9 +2,14 @@
 	"name": "habitscript",
 	"displayName": "HabitScript",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.35",
-	"publisher": "iliashaddad",	
-	"keywords": ["track coding time", "coding time", "productivity", "challenges"],
+	"version": "1.0.36",
+	"publisher": "iliashaddad",
+	"keywords": [
+		"track coding time",
+		"coding time",
+		"productivity",
+		"challenges"
+	],
 	"engines": {
 		"vscode": "^1.34.0"
 	},
@@ -35,12 +40,11 @@
 	"bugs": {
 		"url": "https://github.com/IliasHad/codabit_vscode/issues",
 		"email": "iliasshaddad2016@gmail.com"
-	  },
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/IliasHad/codabit_vscode.git"
-	  },
-	  "homepage": "https://github.com/IliasHad/codabit_vscode/blob/master/README.md",
-	  "icon": "img/logo.png"
-
+	},
+	"homepage": "https://github.com/IliasHad/codabit_vscode/blob/master/README.md",
+	"icon": "img/logo.png"
 }
