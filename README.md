@@ -37,7 +37,7 @@ Initial Realease
 
 -----------------------------------------------------------------------------------------------------------
 
-#### Feel free to ask me any questions or  request feature on [witter](https://twitter.com/IliasHaddad3)
+#### Feel free to ask me any questions , request a feature or resport a issue on [Twitter](https://twitter.com/IliasHaddad3) or on issue section 
 
 
 **Enjoy!**
