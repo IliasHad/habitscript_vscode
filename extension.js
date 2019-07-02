@@ -21,7 +21,7 @@ function activate(context) {
 		let todayCodingTime = 0;
 		let lastSendingData = 0;
 		let lasTimeDataSent = 0;
-		let lastTimeSaved = 0 
+		let lastTimeSaved = Date.now()
 		let fileDuration = [];
 	    let statusBar =   vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 		
@@ -211,6 +211,7 @@ const readJsonFile = () => {
 				  let uri = vscode.Uri.file(file);
 				  let workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
 				  let projectName = workspaceFolder.name;
+				 
 				  return projectName;
 				}
 			}
@@ -218,7 +219,7 @@ const readJsonFile = () => {
 
 		// Get Language Used When Saved Document
 		const getLanguage = (doc) =>  {
-			const language = doc.document.languageId;
+			const language = doc.languageId;
 			return language;
 
 		}
@@ -226,7 +227,7 @@ const readJsonFile = () => {
 	
 		// Get File Name When Saved Document
 		function getFileName(doc){
-			const filePath = doc.document.fileName;
+			const filePath = doc.fileName;
 			const fileName = path.basename(filePath);
 			return fileName;
 		}
@@ -237,56 +238,57 @@ const readJsonFile = () => {
 
 
 	    // When You Write Code
-		const onEvent = (isSaved, doc) => {
+		function onSave(doc) {
+		
 			getTodayCodingTime()
 			showTodayTime()
-			if(lastTimeSaved === 0) {
-				lastTimeSaved = Date.now()
-			}
+			
 		
-
-			if(isSaved) {
+			
 				const fileName = getFileName(doc);
 				const projectName = getProjectName();
 				const language = getLanguage(doc);
 			
-				
-				let lastFileNameChanged = lastFileName
+				lastFileName = fileName;
 			
 
-	
 			
-
+			
+			
 				// Check If Last Saved File Excists in FilDuration Array 
 
-				function checkLastSaved() {
-					let isExcist = false;
-
-					fileDuration.forEach(el => {
+			
+			
+					let isExcited = false
+				 fileDuration.forEach(el => {
+		
+						if(el.fileName === lastFileName) {
+							isExcited = true
 						
-						if(el.fileName === lastFileNameChanged) {
-							isExcist = true
 						}
-
-					
 						
 					})
-					return isExcist;
-				}
+					
+				
+		
+			
 				// Check if array is not empty and fileName and lastFilename are the same
-				if(fileDuration.length > 0 && checkLastSaved()) {
+				// @ts-ignore
+				if(fileDuration.length > 0 && isExcited === true) {
 	
 					fileDuration.forEach(el => {
 					
 
 			
-						if(el.fileName === lastFileNameChanged) {
+						if(el.fileName === lastFileName) {
+
 
 							const pastDurations = el.duration;
-							const newDurations = pastDurations + ((lastTimeSaved - Date.now()) / 1000);
+							const newDurations = pastDurations + (( Date.now() - lastTimeSaved ) / 1000);
 							el.duration = newDurations
 							el.created_at=new Date().toISOString();
-							lastFileName = fileName;
+						
+						
 							lastTimeSaved = Date.now()
 					
 						}
@@ -301,7 +303,8 @@ const readJsonFile = () => {
 
 				// Push New File to FileDuration Array
 
-				else if(fileDuration.length > 0 && !checkLastSaved()) {
+				// @ts-ignore
+				else if(fileDuration.length > 0 && isExcited === false) {
 
 			
 					//console.log(!checkLastSaved())
@@ -309,7 +312,7 @@ const readJsonFile = () => {
 				
 					fileDuration.push({
 						fileName,
-						duration:(lastTimeSaved - Date.now()) / 1000 ,
+						duration:( Date.now() - lastTimeSaved ) / 1000,
 						created_at: new Date().toISOString(), 
 						projectName, 
 						language
@@ -317,6 +320,7 @@ const readJsonFile = () => {
 
 				
 					lastTimeSaved = Date.now()
+					
 				}
 
 			// Check if array is  empty and fileName and lastFilename are the same or aren't the same
@@ -325,21 +329,18 @@ const readJsonFile = () => {
 
 					fileDuration.push({
 						fileName,
-						duration:(lastTimeSaved - Date.now()) / 1000,
+						duration:( Date.now() - lastTimeSaved ) / 1000,
 						created_at: new Date().toISOString(), 
 						projectName, 
 						language
 					})
-					lastFileName = fileName;
+				
 					lastTimeSaved = Date.now()
-
+				
 				}
 
 					
 			
-				
-			//	console.log(fileDuration);
-
 			
 			setTimeout(() => {
 			
@@ -351,8 +352,8 @@ const readJsonFile = () => {
 
 			
 			
-			console.log(fileDuration)
-				}
+			
+				
 			
 
 						
@@ -364,15 +365,15 @@ const readJsonFile = () => {
 			
 
 	// When You Type Anything
-			vscode.workspace.onDidChangeTextDocument((doc) => {
+		/*	vscode.workspace.onDidChangeTextDocument((doc) => {
 			onEvent(false, doc);
 
-		  });
+		  });*/
 
 		  // When You Saved a File
 		  vscode.workspace.onDidSaveTextDocument((doc) => {
-			  console.log('Saved')
-			onEvent(true, doc);
+			 
+			onSave(doc);
 			
 
 		  });
