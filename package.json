@@ -2,7 +2,7 @@
 	"name": "habitscript",
 	"displayName": "HabitScript",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.28",
+	"version": "1.0.35",
 	"publisher": "iliashaddad",	
 	"keywords": ["track coding time", "coding time", "productivity", "challenges"],
 	"engines": {

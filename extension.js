@@ -7,13 +7,13 @@ const fs = require('fs');
 
 
 
-const apiEndpoint = "http://localhost:8000/api/v1/"
-
+const apiEndpoint = require('./config')
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
 	
+	console.log('Habit script activated')
 	
 		// Gloabl Variables
 		let codingTime = 0 ;
@@ -73,9 +73,12 @@ return str;
 	}
 
 		const initialise = () => {
-			statusBar.text = 'Codabits Initalizing ...'
+			statusBar.text = "Start Tracking"
 			statusBar.show();
-			console.log(context.globalState.get('apiKey') )
+			if(context.globalState.get('apiKey') === undefined || context.globalState.get('apiKey') === null ) {
+				getApikey()
+			}
+		
 			getTodayCodingTime()
 			showTodayTime()
 			
@@ -172,7 +175,11 @@ function getTodayCodingTime() {
 
 	fileDuration.forEach(el => {
 		if(getDateFormat(el.created_at) === getDateFormat(new Date().toISOString()))
-		todayCodingTime = el.duration + el.duration
+		{
+			console.log(el.duration)
+	todayCodingTime = el.duration + el.duration
+		}
+	
 	})
 	return todayCodingTime
 }
@@ -230,14 +237,15 @@ const readJsonFile = () => {
 
 
 	    // When You Write Code
-		const onEvent = (isChanged, doc) => {
-		
+		const onEvent = (isSaved, doc) => {
+			getTodayCodingTime()
 			showTodayTime()
 			if(lastTimeSaved === 0) {
 				lastTimeSaved = Date.now()
 			}
+		
 
-			if(isChanged) {
+			if(isSaved) {
 				const fileName = getFileName(doc);
 				const projectName = getProjectName();
 				const language = getLanguage(doc);
@@ -246,7 +254,8 @@ const readJsonFile = () => {
 				let lastFileNameChanged = lastFileName
 			
 
-		
+	
+			
 
 				// Check If Last Saved File Excists in FilDuration Array 
 
@@ -342,7 +351,7 @@ const readJsonFile = () => {
 
 			
 			
-			
+			console.log(fileDuration)
 				}
 			
 
@@ -362,6 +371,7 @@ const readJsonFile = () => {
 
 		  // When You Saved a File
 		  vscode.workspace.onDidSaveTextDocument((doc) => {
+			  console.log('Saved')
 			onEvent(true, doc);
 			
 
