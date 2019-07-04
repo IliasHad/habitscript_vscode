@@ -21,7 +21,7 @@ function activate(context) {
 		let todayCodingTime = 0;
 		let lastSendingData = 0;
 		let lasTimeDataSent = 0;
-		let lastTimeSaved = Date.now()
+		let lastTimeSaved = 0;
 		let fileDuration = [];
 	    let statusBar =   vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 		
@@ -171,16 +171,21 @@ function serverIsDown() {
 
 
 function getTodayCodingTime() {
+	let total = 0;
 
 
-	fileDuration.forEach(el => {
+	fileDuration.forEach((el, prop, obj) => {
+
 		if(getDateFormat(el.created_at) === getDateFormat(new Date().toISOString()))
 		{
-			console.log(el.duration)
-	todayCodingTime = el.duration + el.duration
+			 total += el.duration
+
+	
 		}
 	
 	})
+
+	todayCodingTime = total
 	return todayCodingTime
 }
 
@@ -240,10 +245,15 @@ const readJsonFile = () => {
 	    // When You Write Code
 		function onSave(doc) {
 		
+
+
+			if(lastTimeSaved === 0) {
+				lastTimeSaved = Date.now()
+			}
+		
 			getTodayCodingTime()
 			showTodayTime()
 			
-		
 			
 				const fileName = getFileName(doc);
 				const projectName = getProjectName();
@@ -289,7 +299,7 @@ const readJsonFile = () => {
 							el.created_at=new Date().toISOString();
 						
 						
-							lastTimeSaved = Date.now()
+						
 					
 						}
 
@@ -319,7 +329,7 @@ const readJsonFile = () => {
 					})
 
 				
-					lastTimeSaved = Date.now()
+				
 					
 				}
 
@@ -335,23 +345,18 @@ const readJsonFile = () => {
 						language
 					})
 				
-					lastTimeSaved = Date.now()
+				
 				
 				}
 
 					
+		lastTimeSaved = Date.now()
+			console.log(fileDuration)
+			console.log(todayCodingTime)
+		
+		
 			
-			
-			setTimeout(() => {
-			
-					vscode.window.showInformationMessage("We Sending Data");
-	
-					sendData(fileDuration);
-			
-			},120000)
-
-			
-			
+			setTimeout(sendData, 300000)
 			
 				
 			

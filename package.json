@@ -2,7 +2,7 @@
 	"name": "habitscript",
 	"displayName": "HabitScript",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.36",
+	"version": "1.0.38",
 	"publisher": "iliashaddad",
 	"keywords": [
 		"track coding time",
@@ -48,3 +48,14 @@
 	"homepage": "https://github.com/IliasHad/codabit_vscode/blob/master/README.md",
 	"icon": "img/logo.png"
 }
+
+
+
+
+
+
+
+
+
+
+
