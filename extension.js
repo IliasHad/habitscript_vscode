@@ -4,8 +4,14 @@ const vscode = require('vscode');
 let path = require('path');
 const fetch = require('node-fetch');
 const fs = require('fs');
-
-
+const storage = require('node-persist');
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+const adapter = new FileSync('db.json')
+const db = low(adapter)
+// Set some defaults (required if your JSON file is empty)
+db.defaults({ fileDuration: []})
+.write()
 
 const apiEndpoint = require('./config')
 /**
@@ -191,11 +197,15 @@ function getTodayCodingTime() {
 
 // When Connection Isn't Available we Store Data in JSON File
 
-const createJsonFile = () => {
+function createJsonFile (fileDuration)  {
 	
-	let data = JSON.stringify(fileDuration);  
-	fs.writeFileSync('coding_time.json', data);  
 
+db.set('fileDuration', fileDuration)
+.write()
+
+let fileDurationDB = db.get('fileDuration')
+
+console.log(fileDurationDB)
 }
 
 // When Connection IsAvailable we read  json file and then send it to database
@@ -243,7 +253,7 @@ const readJsonFile = () => {
 
 
 	    // When You Write Code
-		function onSave(doc) {
+		function onSave(isSaved,doc) {
 		
 
 
@@ -279,7 +289,7 @@ const readJsonFile = () => {
 						
 					})
 					
-				
+				if(isSaved) {
 		
 			
 				// Check if array is not empty and fileName and lastFilename are the same
@@ -350,35 +360,36 @@ const readJsonFile = () => {
 				}
 
 					
-		lastTimeSaved = Date.now()
-			console.log(fileDuration)
+		
+		//	console.log(fileDuration)
 			console.log(todayCodingTime)
 		
 		
 			
 			setTimeout(sendData, 300000)
 			
-				
+			createJsonFile(fileDuration)
 			
 
-						
+		}
+		
 
-				
+			lastTimeSaved = Date.now()
 			
 				
 			}
 			
 
 	// When You Type Anything
-		/*	vscode.workspace.onDidChangeTextDocument((doc) => {
-			onEvent(false, doc);
+			vscode.workspace.onDidChangeTextDocument((doc) => {
+				onSave(false, doc);
 
-		  });*/
+		  });
 
 		  // When You Saved a File
 		  vscode.workspace.onDidSaveTextDocument((doc) => {
 			 
-			onSave(doc);
+			onSave(true, doc);
 			
 
 		  });
