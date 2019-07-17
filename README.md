@@ -32,7 +32,6 @@ You need API Key and you can get it from  [HabitScript Setttings](https://habit-
 ### 1.0.39
 
 -Add Offline Tracking
-
 -Add In-Editor Coding Metrics Dashboard
 -----------------------------------------------------------------------------------------------------------
 
