@@ -1,6 +1,6 @@
 const vscode = require("vscode");
 import { checkApi } from "./client";
-import {context} from './extension'
+import { context } from "./extension";
 
 // Show  Input Box to get API Key
 export function getApikey() {
@@ -17,7 +17,7 @@ export function getApikey() {
       context.globalState.update("apiKey", API);
       checkApi();
     } else {
-        vscode.window.showInformationMessage("Oops, API Key is not valid!");
+      vscode.window.showInformationMessage("Oops, API Key is not valid!");
 
       getApikey();
     }

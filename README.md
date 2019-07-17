@@ -4,16 +4,23 @@ Track Your Time Spent On Coding and Make Coding a Habit
 
 ## Features
 
-Track Your Coding Time by Programming language and files
+Track Your Coding Time
 
 Offline tracking time
 
 Earn points from your coding time
 
+Exclude project from being tracked (Beta)
+
+We don't share your data with any third party 
+
+Share your goals using the web app  with others developers to stay accountable 
+
+
 
 ## Requirements
 
-You need API Key and you can get it from  [HabitScript Setttings](https://habit-script.herokuapp.com/signup)
+You need API Key and you can get it from  [HabitScript Setttings](https://habit-script.herokuapp.com/signup) (If you want to visualize your data in the web app)
 
 
 ## Release Notes

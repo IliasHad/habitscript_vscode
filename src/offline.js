@@ -1,4 +1,3 @@
-
 const fs = require("fs");
 import { getJSONFile } from "./dashboard";
 export function serverIsDown(fileDuration) {
@@ -13,7 +12,6 @@ export function createJsonFile(fileDuration) {
     if (err) throw err;
     console.log("The file has been saved!");
   });
- 
 
   let durationsArr = [];
   fs.exists(file, function(exists) {
@@ -63,4 +61,3 @@ export function createJsonFile(fileDuration) {
     }
   }
 }
-

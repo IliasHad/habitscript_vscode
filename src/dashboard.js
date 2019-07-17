@@ -1,7 +1,8 @@
 const os = require("os");
+var moment = require("moment");
 
 const { workspace, window, ViewColumn } = require("vscode");
-
+import { humanizeMinutes } from "./data";
 const fs = require("fs");
 
 let fileDuration = [];
@@ -53,10 +54,11 @@ export function getJSONFile() {
 
 function addDashboardContent() {
   dashboardContent += "\n\n";
-  dashboardContent += `Today Coding Time:  ${getTodayCodingTime(fileDuration)}`;
+  dashboardContent += `Today Coding Time:  ${humanizeMinutes(
+    getTodayCodingTime(fileDuration)
+  )}`;
   dashboardContent += "\n\n";
-
-  dashboardContent += `Most Productive Day:  ${getDateFormat(
+  dashboardContent += `Most Productive Day:  ${humanizeDate(
     getMostProductiveDay(fileDuration)
   )}`;
   dashboardContent += "\n\n";
@@ -71,9 +73,9 @@ function addDashboardContent() {
   dashboardContent += `Sort File By Duration`;
   dashboardContent += "\n\n";
   sortFileByDuration(fileDuration).forEach(el => {
-    dashboardContent += `File Name: ${el.fileName}  Coding Time: ${
-      el.duration
-    }`;
+    dashboardContent += `File Name: ${
+      el.fileName
+    }  Coding Time: ${humanizeMinutes(el.duration)}`;
   });
   dashboardContent += "\n\n";
   console.log(sortLanguageByDuration(fileDuration));
@@ -81,22 +83,23 @@ function addDashboardContent() {
   dashboardContent += `Sort File By Language`;
   dashboardContent += "\n\n";
   sortLanguageByDuration(fileDuration).forEach(el => {
-    dashboardContent += `Language: ${el.language}  Coding Time: ${el.duration}`;
+    dashboardContent += `Language: ${
+      el.language
+    }  Coding Time: ${humanizeMinutes(el.duration)}`;
   });
   return dashboardContent;
 }
 
 // Format Date
-function getDateFormat(date) {
-  const dd = new Date(date).getDate();
-  const mm = new Date(date).getMonth() + 1;
-  const yy = new Date(date).getFullYear();
-  return `${mm}-${dd}-${yy}`;
+export function getDateFormat(date) {
+  return moment(date).format("MM-DD-YYYY");
 }
 
+function humanizeDate(date) {
+  return moment(date).format("dddd, MMMM Do YYYY");
+}
 function getHours(date) {
-  const hrs = new Date(date).getHours();
-  return hrs;
+  return moment(date).format("hh:mm a");
 }
 
 function getTodayCodingTime(duration) {
@@ -154,12 +157,7 @@ function sortLanguageByDuration(durations) {
 }
 
 export function openDashboardFile() {
-  /*  fs.writeFile(file, dashboardContent, (err) => {
-        if (err) throw err;
-        console.log('The file has been saved!');
-        
-      });*/
-  //fs.appendFileSync(file, dashboardContent, "UTF-8",{'flags': 'a+'});
+  
   // @ts-ignore
   fs.writeFileSync(file, dashboardContent, "UTF-8", { flags: "as+" });
 
@@ -170,35 +168,5 @@ export function openDashboardFile() {
     });
   });
   console.log(fileDuration.length);
-  if (fileDuration.length > 0) {
-    console.log(getTodayCodingTime(fileDuration));
-    console.log(getMostProductiveDay(fileDuration));
-    console.log(getMostProductivTimeOfeDay(fileDuration));
-    console.log(getMostUsedLanguage(fileDuration));
-    console.log(sortFileByDuration(fileDuration));
-    console.log(sortLanguageByDuration(fileDuration));
-  }
-}
 
-function humanizeMinutes(sec) {
-  // convert Secondes to Minutes
-  let min = sec / 60;
-  min = min || 0;
-  let str = "";
-  if (min === 1) {
-    str = "1 min";
-  } else if (min === 60) {
-    str = "1 hr";
-  } else if (min > 60) {
-    let hrs = min / 60;
-    if (hrs % 1 === 0) {
-      str = hrs.toFixed(0) + " hrs";
-    } else {
-      str = (Math.round(hrs * 10) / 10).toFixed(1) + " hrs";
-    }
-  } else {
-    // less than 60 seconds
-    str = min.toFixed(0) + " min";
-  }
-  return str;
 }

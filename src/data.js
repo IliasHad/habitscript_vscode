@@ -1,11 +1,13 @@
 const vscode = require("vscode");
 let path = require("path");
 const fs = require("fs");
-import { getJSONFile } from "./dashboard";
+import { getJSONFile, getDateFormat } from "./dashboard";
 import { statusBar, fileDuration } from "./extension";
 import { sendData } from "./client";
 import { createJsonFile } from "./offline";
-
+var moment = require("moment");
+var momentDurationFormatSetup = require("moment-duration-format");
+momentDurationFormatSetup(moment);
 // Gloabl Variables
 let lastFileName;
 let todayCodingTime = 0;
@@ -39,13 +41,6 @@ export function getTodayCodingTime() {
   return todayCodingTime;
 }
 
-function getDateFormat(date) {
-  const dd = new Date(date).getDate();
-  const mm = new Date(date).getMonth() + 1;
-  const yy = new Date(date).getFullYear();
-  return `${mm}-${dd}-${yy}`;
-}
-
 // Get Project Name
 const getProjectName = () => {
   let editor = vscode.window.activeTextEditor;
@@ -77,31 +72,12 @@ function getFileName(doc) {
 
 export function showTodayTime() {
   statusBar.text = `Today ${humanizeMinutes(todayCodingTime)}`;
+  console.log(humanizeMinutes(todayCodingTime));
 }
 
-function humanizeMinutes(sec) {
-  // convert Secondes to Minutes
-  let min = sec / 60;
-  min = min || 0;
-  let str = "";
-  if (min === 1) {
-    str = "1 min";
-  } else if (min === 60) {
-    str = "1 hr";
-  } else if (min > 60) {
-    let hrs = min / 60;
-    if (hrs % 1 === 0) {
-      str = hrs.toFixed(0) + " hrs";
-    } else {
-      str = (Math.round(hrs * 10) / 10).toFixed(1) + " hrs";
-    }
-  } else {
-    // less than 60 seconds
-    str = min.toFixed(0) + " min";
-  }
-  return str;
+export function humanizeMinutes(ms) {
+  return moment.duration(ms, "milliseconds").format("h [hrs], m [min]");
 }
-
 // When You Write Code
 export function onSave(isSaved, doc) {
   if (lastTimeSaved === 0) {
@@ -130,8 +106,7 @@ export function onSave(isSaved, doc) {
       fileDuration.forEach(el => {
         if (el.fileName === lastFileName) {
           const pastDurations = el.duration;
-          const newDurations =
-            pastDurations + (Date.now() - lastTimeSaved) / 1000;
+          const newDurations = pastDurations + (Date.now() - lastTimeSaved);
           el.duration = newDurations;
           el.created_at = new Date().toISOString();
         }
@@ -149,7 +124,7 @@ export function onSave(isSaved, doc) {
 
       fileDuration.push({
         fileName,
-        duration: (Date.now() - lastTimeSaved) / 1000,
+        duration: Date.now() - lastTimeSaved,
         created_at: new Date().toISOString(),
         projectName,
         language
@@ -160,7 +135,7 @@ export function onSave(isSaved, doc) {
     else if (fileDuration.length <= 0) {
       fileDuration.push({
         fileName,
-        duration: (Date.now() - lastTimeSaved) / 1000,
+        duration: Date.now() - lastTimeSaved,
         created_at: new Date().toISOString(),
         projectName,
         language

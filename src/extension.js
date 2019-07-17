@@ -2,11 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require("vscode");
 
-
-
 import { getTodayCodingTime, showTodayTime, onSave } from "./data.js";
 import { registerCommands } from "./commands";
-
 
 export let statusBar = vscode.window.createStatusBarItem(
   vscode.StatusBarAlignment.Left
