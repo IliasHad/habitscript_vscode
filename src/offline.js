@@ -1,40 +1,66 @@
 
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
-const adapter = new FileSync('db.json')
-const db = low(adapter);
-
-
-
-// Set some defaults (required if your JSON file is empty)
-db.defaults({ fileDuration: []})
-.write()
-
-
+const fs = require("fs");
+import { getJSONFile } from "./dashboard";
 export function serverIsDown(fileDuration) {
-	createJsonFile(fileDuration)
-	
+  createJsonFile(fileDuration);
 }
-
-
 
 // When Connection Isn't Available we Store Data in JSON File
 
-function createJsonFile (fileDuration)  {
-	
+export function createJsonFile(fileDuration) {
+  let file = getJSONFile();
+  fs.writeFile(file, JSON.stringify(fileDuration), err => {
+    if (err) throw err;
+    console.log("The file has been saved!");
+  });
+ 
 
-db.set('fileDuration', fileDuration)
-.write()
+  let durationsArr = [];
+  fs.exists(file, function(exists) {
+    if (exists) {
+      let data = fs.readFileSync(file);
 
-let fileDurationDB = db.get('fileDuration')
+      // @ts-ignore
+      durationsArr = JSON.parse(data);
+      checkAndAddFile(fileDuration);
+    }
+  });
 
-console.log(fileDurationDB)
+  // Format Date
+  function getDateFormat(date) {
+    const dd = new Date(date).getDate();
+    const mm = new Date(date).getMonth() + 1;
+    const yy = new Date(date).getFullYear();
+    return `${mm}-${dd}-${yy}`;
+  }
+
+  function checkAndAddFile(fileDuration) {
+    if (durationsArr.length > 0) {
+      durationsArr.forEach(el => {
+        fileDuration.forEach(duration => {
+          // Update exciting file with new duration
+
+          if (
+            el.fileName === duration.fileName &&
+            getDateFormat(el.created_at) === getDateFormat(new Date())
+          ) {
+            el.duration = duration.duration;
+          } else {
+            // Add Duration when filename doesn't excists in json file
+
+            durationsArr.push({
+              projectName: duration.projectName,
+              duration: duration.duration,
+              fileName: duration.fileName,
+              created_at: duration.created_at
+            });
+          }
+        });
+      });
+    } else {
+      // add file duration array when we don't have in json file
+      durationsArr.push(fileDuration);
+    }
+  }
 }
-
-// When Connection IsAvailable we read  json file and then send it to database
-
-
-
-
-
 
