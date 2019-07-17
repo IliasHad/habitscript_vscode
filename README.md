@@ -14,13 +14,13 @@ Exclude project from being tracked (Beta)
 
 We don't share your data with any third party 
 
-Share your goals using the web app  with others developers to stay accountable 
+Share your goals using the web app  with others developers to stay accountable (Beta)
 
 
 
 ## Requirements
 
-You need API Key and you can get it from  [HabitScript Setttings](https://habit-script.herokuapp.com/signup) (If you want to visualize your data in the web app (Beta))
+If you want to visualize your data in the web app: You need API Key and you can get it from  [HabitScript Setttings](https://habit-script.herokuapp.com/signup) (Beta)
 
 
 ## Release Notes
@@ -41,6 +41,8 @@ Fix tracking time issues
 Add Offline Tracking
 
 Add In-Editor Coding Metrics Dashboard
+
+Fix tracking time issues
 
 -----------------------------------------------------------------------------------------------------------
 
