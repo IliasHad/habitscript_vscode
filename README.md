@@ -22,18 +22,18 @@ You need API Key and you can get it from  [HabitScript Setttings](https://habit-
 
 ### 1.0.0
 
-Initial Realease
+-Initial Realease
 
 
 ### 1.0.36
 
-Fix tracking time issues
+-Fix tracking time issues
 
 ### 1.0.39
 
-Add Offline Tracking
+-Add Offline Tracking
 
-Add In-Editor Coding Metrics Dashboard
+-Add In-Editor Coding Metrics Dashboard
 -----------------------------------------------------------------------------------------------------------
 
 ### For more information
