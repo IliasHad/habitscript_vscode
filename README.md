@@ -20,7 +20,7 @@ Share your goals using the web app  with others developers to stay accountable
 
 ## Requirements
 
-You need API Key and you can get it from  [HabitScript Setttings](https://habit-script.herokuapp.com/signup) (If you want to visualize your data in the web app)
+You need API Key and you can get it from  [HabitScript Setttings](https://habit-script.herokuapp.com/signup) (If you want to visualize your data in the web app (Beta))
 
 
 ## Release Notes
