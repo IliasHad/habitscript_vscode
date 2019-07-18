@@ -18,7 +18,13 @@ export function createJsonFile(fileDuration) {
       // @ts-ignore
       durationsArr = JSON.parse(data);
       checkAndAddFile(fileDuration);
+      fs.writeFile(file, JSON.stringify(durationsArr), err => {
+        if (err) console.log(err);
+        console.log("The file has been saved!");
+      });
     }
+
+    
     else {
       fs.writeFile(file, JSON.stringify(fileDuration), err => {
         if (err) throw err;
@@ -60,5 +66,6 @@ console.log(getDateFormat(el.created_at) === getDateFormat(new Date()))
       // add file duration array when we don't have in json file
       durationsArr.push(fileDuration);
     }
+   
   }
 
