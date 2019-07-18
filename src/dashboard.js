@@ -13,8 +13,6 @@ let JSONFile = getJSONFile();
 
 let dashboardContent = `HabitScript Dashboard`;
 
-console.log(JSONFile);
-
 fs.exists(JSONFile, function(exists) {
   if (exists) {
     let data = fs.readFileSync(JSONFile);
@@ -60,7 +58,7 @@ function addDashboardContent() {
   )}`;
   dashboardContent += "\n\n";
   dashboardContent += `Earned Karmas:  ${getKarma(fileDuration)}`;
-
+  dashboardContent += "\n\n";
   dashboardContent += `Most Productive Day:  ${humanizeDate(
     getMostProductiveDay(fileDuration)
   )}`;
@@ -162,7 +160,6 @@ function sortLanguageByDuration(durations) {
 }
 
 export function openDashboardFile() {
-  
   // @ts-ignore
   fs.writeFileSync(file, dashboardContent, "UTF-8", { flags: "as+" });
 
@@ -173,5 +170,4 @@ export function openDashboardFile() {
     });
   });
   console.log(fileDuration.length);
-
 }

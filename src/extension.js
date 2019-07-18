@@ -10,32 +10,16 @@ export let statusBar = vscode.window.createStatusBarItem(
 );
 export let fileDuration = [];
 
-
-
 /**
  * @param {vscode.ExtensionContext} context
  */
 
-
-
-
 export function activate(context) {
-  console.log("Habit script activated");
- 
- 
+  statusBar.text = "Start Tracking...";
+  statusBar.show();
 
-  // Initialise the Extension
-  initialise();
-
-  function initialise() {
-    statusBar.text = "Start Tracking";
-    statusBar.show();
- 
-  
-    
-    getTodayCodingTime();
-    showTodayTime();
-  }
+  getTodayCodingTime();
+  showTodayTime();
 
   // When You Type Anything
   vscode.workspace.onDidChangeTextDocument(doc => {
@@ -49,19 +33,7 @@ export function activate(context) {
 
   // add the player commands
   context.subscriptions.push(registerCommands());
- 
-
-  function updateState (api) {
- 
-    //  return contextVs.update("apiKey", api);
-      } 
-    
-   
- 
 }
-
-
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
-

@@ -3,22 +3,23 @@ let path = require("path");
 const fs = require("fs");
 import { getJSONFile, getDateFormat } from "./dashboard";
 import { statusBar, fileDuration } from "./extension";
-import { sendData } from "./client";
+import { sendData, isBestTimeToSend } from "./client";
 import { createJsonFile } from "./offline";
-import {getKarma} from "./karma"
+import { getKarma } from "./karma";
 const moment = require("moment");
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
-
 
 // Gloabl Variables
 let lastFileName;
 let todayCodingTime = 0;
 let lastTimeSaved = 0;
-let fileDurationJSON = [];
 let JSONFile = getJSONFile();
 
-fs.exists(JSONFile, function(exists) {
+let fileDurationJSON = [];
+
+export function getTodayCodingTime() {
+  let exists = fs.existsSync(JSONFile);
   if (exists) {
     let data = fs.readFileSync(JSONFile);
     console.log("The file has been readed!");
@@ -26,22 +27,19 @@ fs.exists(JSONFile, function(exists) {
     // @ts-ignore
     fileDurationJSON = JSON.parse(data);
   }
-});
 
-export function getTodayCodingTime() {
   let total = 0;
-
+  console.log(fileDurationJSON);
   fileDurationJSON.forEach(el => {
-  
-    if (
-      getDateFormat(el.created_at) === getDateFormat(new Date())
-    ) {
+    if (getDateFormat(el.created_at) === getDateFormat(new Date())) {
       total += el.duration;
       console.log(total);
     }
   });
 
   todayCodingTime = total;
+  console.log(`Today ${todayCodingTime}`);
+
   return todayCodingTime;
 }
 
@@ -75,16 +73,14 @@ function getFileName(doc) {
 }
 
 export function showTodayTime() {
-  statusBar.text = `Today ${humanizeMinutes(todayCodingTime)}  |  🎉 ${getKarma(fileDurationJSON)} karma`;
-
-  
+  statusBar.text = `Today ${humanizeMinutes(todayCodingTime)}  |  🎉 ${getKarma(
+    todayCodingTime
+  )} karma`;
 }
 
 export function humanizeMinutes(ms) {
   return moment.duration(ms, "milliseconds").format("h [hrs], m [min]");
 }
-
-
 
 export function onSave(isSaved, doc) {
   if (lastTimeSaved === 0) {
@@ -153,21 +149,13 @@ export function onSave(isSaved, doc) {
     console.log(todayCodingTime);
 
     createJsonFile(fileDuration);
-    //   console.log(fileDuration);
-    // console.log(fileDurationInDB)
+
     getTodayCodingTime();
     showTodayTime();
-    setTimeout(sendData, 120000);
- 
-
-    /*   const homedir = os.homedir();
-  let softwareDataDir = homedir;
-   console.log(softwareDataDir)*/
-    /* if (isWindows()) {
-       softwareDataDir += "\\.software";
-   } else {
-       softwareDataDir += "/.software";
-   }*/
+    let now = Date.now()
+    if (isBestTimeToSend(now)) {
+      sendData();
+    }
   }
 
   lastTimeSaved = Date.now();

@@ -11,9 +11,13 @@ import { getApikey } from "./login";
 
   
 let apiKey;
-let lastSendingData = 0;
+let lastSendingData = Date.now();
+export function isBestTimeToSend(now) {
+ 
 
-export function sendData(context) {
+  return lastSendingData + 120000 < now;
+}
+export function sendData() {
   let file = getJSONFile();
   let fileDuration = [];
   let data = fs.readFileSync(file);
@@ -45,6 +49,7 @@ export function sendData(context) {
   sendPost()
     .then(data => {
       console.log(data);
+      lastSendingData = Date.now();
     })
     .catch(err => {
       console.log(err);
