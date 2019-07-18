@@ -50,6 +50,11 @@ Add Karma Functionality
 
 Fix Offline Tracking 
 
+### 1.0.40
+
+Fix Offline Tracking 
+
+
 -----------------------------------------------------------------------------------------------------------
 
 ### For more information
