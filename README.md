@@ -57,7 +57,6 @@ Fix Offline Tracking
 * [HabitScript VS Code Extension](https://marketplace.visualstudio.com/items?itemName=IliasHaddad.habitscript)
 * [Maker Twitter](https://twitter.com/IliasHaddad3)
 * [What I learned after building this vs code extension and the web app in 15 days as Self Taught Developer](https://medium.com/@iliashaddad/what-i-learned-after-building-my-first-product-in-15-days-as-self-taught-developer-ec856e72b05)
-* [Roadmap](https://trello.com/b/7OUdaaeZ/habitscript-roadmap)
 
 
 
