@@ -44,6 +44,12 @@ Add In-Editor Coding Metrics Dashboard
 
 Fix tracking time issues
 
+## 1.0.40
+
+Add Karma Functionality 
+
+Fix Offline Tracking 
+
 -----------------------------------------------------------------------------------------------------------
 
 ### For more information
