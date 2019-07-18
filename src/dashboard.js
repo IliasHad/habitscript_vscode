@@ -3,6 +3,7 @@ var moment = require("moment");
 
 const { workspace, window, ViewColumn } = require("vscode");
 import { humanizeMinutes } from "./data";
+import { getKarma } from "./karma";
 const fs = require("fs");
 
 let fileDuration = [];
@@ -58,6 +59,8 @@ function addDashboardContent() {
     getTodayCodingTime(fileDuration)
   )}`;
   dashboardContent += "\n\n";
+  dashboardContent += `Earned Karmas:  ${getKarma(fileDuration)}`;
+
   dashboardContent += `Most Productive Day:  ${humanizeDate(
     getMostProductiveDay(fileDuration)
   )}`;
@@ -76,6 +79,7 @@ function addDashboardContent() {
     dashboardContent += `File Name: ${
       el.fileName
     }  Coding Time: ${humanizeMinutes(el.duration)}`;
+    dashboardContent += "\n\n";
   });
   dashboardContent += "\n\n";
   console.log(sortLanguageByDuration(fileDuration));
@@ -86,6 +90,7 @@ function addDashboardContent() {
     dashboardContent += `Language: ${
       el.language
     }  Coding Time: ${humanizeMinutes(el.duration)}`;
+    dashboardContent += "\n\n";
   });
   return dashboardContent;
 }

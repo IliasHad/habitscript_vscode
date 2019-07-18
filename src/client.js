@@ -1,30 +1,34 @@
-const fetch = require("node-fetch");
+const fetch = require('node-fetch').default
 const apiEndpoint = require("./config");
-const vscode = require("vscode");
+import vscode from "vscode"
 const fs = require("fs");
 
-import { statusBar, apiKey, fileDuration } from "./extension";
 import { serverIsDown } from "./offline";
 import { getJSONFile } from "./dashboard";
 import { getApikey } from "./login";
+
+
+
+  
+let apiKey;
 let lastSendingData = 0;
 
-export function sendData() {
+export function sendData(context) {
   let file = getJSONFile();
   let fileDuration = [];
   let data = fs.readFileSync(file);
-
+  
   // @ts-ignore
   fileDuration = JSON.parse(data);
 
   let url = `${apiEndpoint}duration`;
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  console.log(url);
+  console.log(url, new Date().toISOString());
 
   let body = {
     fileDuration,
-    apiKey
+    apiKey:""
   };
   async function sendPost() {
     // @ts-ignore
@@ -73,7 +77,7 @@ export function checkApi() {
       console.log(resData);
       if (resData !== undefined) {
         vscode.window.showInformationMessage(
-          "Congratulations, Codabits is now active!"
+          "Congratulations, HabitScript is now active!"
         );
       } else {
         vscode.window.showInformationMessage("Oops, API Key is not valid!");

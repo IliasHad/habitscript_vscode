@@ -5,9 +5,12 @@ import { getJSONFile, getDateFormat } from "./dashboard";
 import { statusBar, fileDuration } from "./extension";
 import { sendData } from "./client";
 import { createJsonFile } from "./offline";
-var moment = require("moment");
-var momentDurationFormatSetup = require("moment-duration-format");
+import {getKarma} from "./karma"
+const moment = require("moment");
+const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
+
+
 // Gloabl Variables
 let lastFileName;
 let todayCodingTime = 0;
@@ -29,8 +32,9 @@ export function getTodayCodingTime() {
   let total = 0;
 
   fileDurationJSON.forEach(el => {
+  
     if (
-      getDateFormat(el.created_at) === getDateFormat(new Date().toISOString())
+      getDateFormat(el.created_at) === getDateFormat(new Date())
     ) {
       total += el.duration;
       console.log(total);
@@ -71,14 +75,17 @@ function getFileName(doc) {
 }
 
 export function showTodayTime() {
-  statusBar.text = `Today ${humanizeMinutes(todayCodingTime)}`;
-  console.log(humanizeMinutes(todayCodingTime));
+  statusBar.text = `Today ${humanizeMinutes(todayCodingTime)}  |  🎉 ${getKarma(fileDurationJSON)} karma`;
+
+  
 }
 
 export function humanizeMinutes(ms) {
   return moment.duration(ms, "milliseconds").format("h [hrs], m [min]");
 }
-// When You Write Code
+
+
+
 export function onSave(isSaved, doc) {
   if (lastTimeSaved === 0) {
     lastTimeSaved = Date.now();
@@ -151,7 +158,7 @@ export function onSave(isSaved, doc) {
     getTodayCodingTime();
     showTodayTime();
     setTimeout(sendData, 120000);
-    // sendData(fileDuration)
+ 
 
     /*   const homedir = os.homedir();
   let softwareDataDir = homedir;

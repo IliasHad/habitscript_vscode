@@ -1,7 +1,7 @@
 import { commands, Disposable } from "vscode";
 
 import { openDashboardFile } from "./dashboard";
-import { getApikey } from "./login";
+import { isLogin } from "./login";
 export function registerCommands() {
   let cmds = [];
 
@@ -9,7 +9,7 @@ export function registerCommands() {
     "extension.openDashboard",
     openDashboardFile
   );
-  let login = commands.registerCommand("extension.auth", getApikey);
+  let login = commands.registerCommand("extension.auth", isLogin);
   cmds.push(openDashboard, login);
   return Disposable.from(...cmds);
 }

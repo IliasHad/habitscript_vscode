@@ -2,7 +2,7 @@
 	"name": "habitscript",
 	"displayName": "HabitScript",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.39",
+	"version": "1.0.40",
 	"publisher": "iliashaddad",
 	"keywords": [
 		"track coding time",
@@ -48,6 +48,7 @@
 		"webpack-cli": "^3.3.5"
 	},
 	"dependencies": {
+		"lowdb": "^1.0.0",
 		"moment": "^2.24.0",
 		"moment-duration-format": "^2.3.2",
 		"moment-timezone": "^0.5.26",
