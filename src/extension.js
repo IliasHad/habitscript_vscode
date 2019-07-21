@@ -21,6 +21,7 @@ export function activate(context) {
   getTodayCodingTime();
   showTodayTime();
 
+  
   // When You Type Anything
   vscode.workspace.onDidChangeTextDocument(doc => {
     onSave(false, doc);
@@ -33,6 +34,10 @@ export function activate(context) {
 
   // add the player commands
   context.subscriptions.push(registerCommands());
+
+
+   
+
 }
 
 // this method is called when your extension is deactivated

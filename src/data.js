@@ -29,16 +29,14 @@ export function getTodayCodingTime() {
   }
 
   let total = 0;
-  console.log(fileDurationJSON);
+
   fileDurationJSON.forEach(el => {
     if (getDateFormat(el.created_at) === getDateFormat(new Date())) {
       total += el.duration;
-      console.log(total);
     }
   });
 
   todayCodingTime = total;
-  console.log(`Today ${todayCodingTime}`);
 
   return todayCodingTime;
 }
@@ -122,8 +120,7 @@ export function onSave(isSaved, doc) {
 
     // @ts-ignore
     else if (fileDuration.length > 0 && isExcited === false) {
-      //console.log(!checkLastSaved())
-      //console.log('Hi From Checking')
+     
 
       fileDuration.push({
         fileName,
@@ -146,16 +143,18 @@ export function onSave(isSaved, doc) {
     }
 
     //	console.log(fileDuration)
-    console.log(todayCodingTime);
 
+    console.log("Before Creating Json File....");
     createJsonFile(fileDuration);
 
     getTodayCodingTime();
     showTodayTime();
-    let now = Date.now()
-    if (isBestTimeToSend(now)) {
+    let now = Date.now();
+
+    // Sending Data to Server but after user enter the api key
+    /*if (isBestTimeToSend(now)) {
       sendData();
-    }
+    }*/
   }
 
   lastTimeSaved = Date.now();

@@ -48,11 +48,11 @@ Fix tracking time issues
 
 Add Karma Functionality 
 
-Fix Offline Tracking 
+Fix Offline Tracking issues
 
-### 1.0.45
+### 1.0.46
 
-Fix Offline Tracking 
+Fix Offline Tracking  issues
 
 
 -----------------------------------------------------------------------------------------------------------

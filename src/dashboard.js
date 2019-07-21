@@ -13,17 +13,6 @@ let JSONFile = getJSONFile();
 
 let dashboardContent = `HabitScript Dashboard`;
 
-fs.exists(JSONFile, function(exists) {
-  if (exists) {
-    let data = fs.readFileSync(JSONFile);
-    console.log("The file has been readed!");
-
-    // @ts-ignore
-    fileDuration = JSON.parse(data);
-
-    addDashboardContent();
-  }
-});
 
 function isWindows() {
   return process.platform.indexOf("win32") !== -1;
@@ -52,6 +41,18 @@ export function getJSONFile() {
 }
 
 function addDashboardContent() {
+  fs.exists(JSONFile, function(exists) {
+  if (exists) {
+    let data = fs.readFileSync(JSONFile);
+    console.log("The file has been readed!");
+
+    // @ts-ignore
+    fileDuration = JSON.parse(data);
+
+   
+  }
+});
+
   dashboardContent += "\n\n";
   dashboardContent += `Today Coding Time:  ${humanizeMinutes(
     getTodayCodingTime(fileDuration)
@@ -160,6 +161,8 @@ function sortLanguageByDuration(durations) {
 }
 
 export function openDashboardFile() {
+
+   addDashboardContent();
   // @ts-ignore
   fs.writeFileSync(file, dashboardContent, "UTF-8", { flags: "as+" });
 

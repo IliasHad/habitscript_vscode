@@ -10,6 +10,7 @@ let durationsArr = [];
 let file = getJSONFile();
 
 export function createJsonFile(fileDuration) {
+  console.log("Creating JSON File...");
   fs.exists(file, function(exists) {
     if (exists) {
       let data = fs.readFileSync(file);
@@ -23,7 +24,9 @@ export function createJsonFile(fileDuration) {
         if (err) console.log(err);
         console.log("The file has been saved!");
       });
-    } else {
+    }
+    // If json doesn't exicst
+    else {
       fs.writeFile(file, JSON.stringify(fileDuration), err => {
         if (err) throw err;
         console.log("The file has been saved!");
@@ -33,31 +36,38 @@ export function createJsonFile(fileDuration) {
 }
 
 function checkAndAddFile(fileDuration) {
-  console.log(fileDuration);
-  if (durationsArr.length > 0) {
-    durationsArr.forEach(el => {
-      fileDuration.forEach(duration => {
-        // Update exciting file with new duration
-        console.log(getDateFormat(el.created_at) === getDateFormat(new Date()));
-        if (
-          el.fileName === duration.fileName &&
-          getDateFormat(el.created_at) === getDateFormat(new Date()) &&
-          el.projectName === duration.projectName
-        ) {
-          el.duration += duration.duration;
-        } else {
-          // Add Duration when filename doesn't excists in json file
+  console.log("Checking File....");
 
-          durationsArr.push({
-            projectName: duration.projectName,
-            duration: duration.duration,
-            fileName: duration.fileName,
-            created_at: duration.created_at,
-            language: duration.language
-          });
-        }
+  // Intiliase empty array
+
+  // index of duplicate file in the array in JSON file
+  let indexOfExciting;
+  //let index ;
+  console.log(`JSON Array Length ${durationsArr.length}`);
+
+  if (durationsArr.length > 0) {
+    let newArr = [];
+
+    newArr = fileDuration.concat(durationsArr);
+
+    console.log(newArr);
+    var result = newArr.reduce(function(prev, item) {
+      var newItem = prev.find(function(i) {
+        console.log(i.fileName, item.fileName);
+        return i.fileName === item.fileName;
       });
-    });
+      if (newItem) {
+        console.log(newItem.duration, item.duration);
+        const newDuration = newItem.duration + item.duration;
+        Object.assign(newItem.duration, newDuration);
+      } else {
+        prev.push(item);
+      }
+      return prev;
+    }, []);
+
+    console.log(result);
+    durationsArr = result;
   } else {
     // add file duration array when we don't have in json file
     durationsArr = fileDuration;
