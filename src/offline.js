@@ -48,16 +48,17 @@ function checkAndAddFile(fileDuration) {
   if (durationsArr.length > 0) {
     let newArr = [];
 
-    newArr = fileDuration.concat(durationsArr);
+    
+     newArr = fileDuration.concat(durationsArr);
 
-    console.log(newArr);
+    
     var result = newArr.reduce(function(prev, item) {
       var newItem = prev.find(function(i) {
-        console.log(i.fileName, item.fileName);
+        
         return i.fileName === item.fileName;
       });
       if (newItem) {
-        console.log(newItem.duration, item.duration);
+     
         const newDuration = newItem.duration + item.duration;
         Object.assign(newItem.duration, newDuration);
       } else {

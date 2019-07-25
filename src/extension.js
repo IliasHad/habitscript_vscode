@@ -4,7 +4,7 @@ const vscode = require("vscode");
 
 import { getTodayCodingTime, showTodayTime, onSave } from "./data.js";
 import { registerCommands } from "./commands";
-
+import { addDashboardContent} from "./dashboard"
 export let statusBar = vscode.window.createStatusBarItem(
   vscode.StatusBarAlignment.Left
 );
@@ -20,7 +20,7 @@ export function activate(context) {
 
   getTodayCodingTime();
   showTodayTime();
-
+  addDashboardContent()
   
   // When You Type Anything
   vscode.workspace.onDidChangeTextDocument(doc => {

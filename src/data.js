@@ -1,7 +1,7 @@
 const vscode = require("vscode");
 let path = require("path");
 const fs = require("fs");
-import { getJSONFile, getDateFormat } from "./dashboard";
+import { getJSONFile, getDateFormat,   addDashboardContent } from "./dashboard";
 import { statusBar, fileDuration } from "./extension";
 import { sendData, isBestTimeToSend } from "./client";
 import { createJsonFile } from "./offline";
@@ -150,11 +150,14 @@ export function onSave(isSaved, doc) {
     getTodayCodingTime();
     showTodayTime();
     let now = Date.now();
+   
 
     // Sending Data to Server but after user enter the api key
     /*if (isBestTimeToSend(now)) {
       sendData();
     }*/
+    addDashboardContent()
+
   }
 
   lastTimeSaved = Date.now();

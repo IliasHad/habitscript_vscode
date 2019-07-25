@@ -40,7 +40,11 @@ export function getJSONFile() {
   return softwareDataDir;
 }
 
-function addDashboardContent() {
+export function addDashboardContent() {
+
+
+
+
   fs.exists(JSONFile, function(exists) {
   if (exists) {
     let data = fs.readFileSync(JSONFile);
@@ -49,10 +53,7 @@ function addDashboardContent() {
     // @ts-ignore
     fileDuration = JSON.parse(data);
 
-   
-  }
-});
-
+   console.log(fileDuration)
   dashboardContent += "\n\n";
   dashboardContent += `Today Coding Time:  ${humanizeMinutes(
     getTodayCodingTime(fileDuration)
@@ -72,26 +73,44 @@ function addDashboardContent() {
     fileDuration
   )}`;
   dashboardContent += "\n\n";
-  dashboardContent += `Sort File By Duration`;
+  dashboardContent += `File Name  ${humanizeDate(new Date())}`;
   dashboardContent += "\n\n";
-  sortFileByDuration(fileDuration).forEach(el => {
+  sortFileByDuration(fileDuration, new Date()).forEach(el => {
     dashboardContent += `File Name: ${
       el.fileName
-    }  Coding Time: ${humanizeMinutes(el.duration)}`;
+    }  Coding Time: ${humanizeMinutes(el.duration)} Project Name: ${el.projectName}`;
     dashboardContent += "\n\n";
   });
   dashboardContent += "\n\n";
-  console.log(sortLanguageByDuration(fileDuration));
 
-  dashboardContent += `Sort File By Language`;
+  dashboardContent += `Language  ${humanizeDate(new Date())}`;
   dashboardContent += "\n\n";
-  sortLanguageByDuration(fileDuration).forEach(el => {
+  sortLanguageByDuration(fileDuration, new Date()).forEach(el => {
     dashboardContent += `Language: ${
       el.language
     }  Coding Time: ${humanizeMinutes(el.duration)}`;
     dashboardContent += "\n\n";
   });
-  return dashboardContent;
+
+  
+ // @ts-ignore
+ fs.writeFile(file, dashboardContent, "UTF-8", function (err) {
+  if (err) {
+  console.log(err)
+  }
+})
+
+  }
+  else {
+     // @ts-ignore
+   fs.writeFile(file, dashboardContent, "UTF-8", function (err) {
+    if (err) {
+    console.log(err)
+    }
+  })
+  }
+});
+
 }
 
 // Format Date
@@ -99,7 +118,7 @@ export function getDateFormat(date) {
   return moment(date).format("MM-DD-YYYY");
 }
 
-function humanizeDate(date) {
+export function humanizeDate(date) {
   return moment(date).format("dddd, MMMM Do YYYY");
 }
 function getHours(date) {
@@ -123,6 +142,7 @@ function getTodayCodingTime(duration) {
 
 // Get Most Productive Day in the Week
 function getMostProductiveDay(durations) {
+  console.log(durations)
   const highest = durations.sort((a, b) => b.duration - a.duration)[0];
 
   return highest.created_at;
@@ -139,38 +159,108 @@ function getMostProductivTimeOfeDay(durations) {
 }
 
 //Get Most Used Programming Language All Time
-function getMostUsedLanguage(durations) {
+function getMostUsedLanguage(durations, date) {
+  console.log(durations)
   const highest = durations.sort((a, b) => b.duration - a.duration)[0];
 
   return highest.language;
 }
 
 // Sort File Name By Duration
-function sortFileByDuration(durations) {
+function sortFileByDuration(durations, date) {
+  console.log(durations)
+
   const highest = durations.sort((a, b) => b.duration - a.duration);
 
   return highest;
 }
+function sortLanguageByDuration(durations, day) {
 
-// Sort Programming Language By Duration
+  let array = []
+  const date = durations.filter(el => getDateFormat(el.created_at) === getDateFormat(day))
 
-function sortLanguageByDuration(durations) {
-  const highest = durations.sort((a, b) => b.duration - a.duration);
+  /*
+  date.reduce((prev, item )=> {
+
+    console.log(prev.language, item.language)
+
+    if(prev.language === item.language) {
+
+      const newDuration = prev.duration + item.duration
+      item.duration = newDuration
+      console.log(newDuration)
+      array.push({
+        fileName: item.fileNmae,
+        duration: newDuration,
+        language: item.language,
+        created_at: item.created_at,
+        projectName: item.projectName
+      })
+    }
+
+    else {
+      array.push({
+        fileName: item.fileNmae,
+        duration: item.duration,
+        language: item.language,
+        created_at: item.created_at,
+        projectName: item.projectName
+      })
+    }
+    return item
+  })
+ */
+  const highest = date.sort((a, b) => b.duration - a.duration);
 
   return highest;
 }
 
-export function openDashboardFile() {
 
-   addDashboardContent();
-  // @ts-ignore
-  fs.writeFileSync(file, dashboardContent, "UTF-8", { flags: "as+" });
 
-  workspace.openTextDocument(file).then(doc => {
-    // only focus if it's not already open
-    window.showTextDocument(doc, ViewColumn.One, false).then(e => {
-      // done
-    });
-  });
-  console.log(fileDuration.length);
+
+
+export function openDashboardFile () {
+
+ 
+
+
+        workspace.openTextDocument(file)
+
+
+          .then(
+            (doc) => { 
+
+              console.log(doc , doc === null, doc === undefined)
+
+             if(doc === undefined ||  doc === null) {
+               openDashboardFile()
+             }
+             else {
+              window.showTextDocument(doc, ViewColumn.One, false).then(
+                (e) => { 
+    
+                  if(e === null ||   e === undefined) {
+                    openDashboardFile()
+                  }
+               console.log(e , e === null, e === undefined)
+               
+              }, 
+                (err) => { 
+                  console.log(err)
+                  openDashboardFile()
+                 })
+             }
+          
+          }, 
+            (err) => { 
+              console.log(err)
+              openDashboardFile()
+             })
+          // only focus if it's not already open
+         
+   
+
 }
+
+
+ 
