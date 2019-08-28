@@ -20,7 +20,7 @@ Share your goals using the web app  with others developers to stay accountable (
 
 After you have installed the plugin it will start to collect data automatically
 
-If you haven't connected to your HabitScript account you can view your data locally by going to `View > Command Palette` or by pressing `Shift + Cmd + P` on Mac and then run `Open Dashboard File`
+If you haven't connected to your HabitScript account you can view your data locally by going to `View > Command Palette` or by pressing `Cmd + Shift + P` on Mac or `Ctrl + Shift + P` on Windows and then run command `Open Dashboard File`
 
 
 ## Requirements
