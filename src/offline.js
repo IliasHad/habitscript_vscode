@@ -1,6 +1,6 @@
 const fs = require("fs");
 import { getJSONFile, getDateFormat } from "./dashboard";
-
+import {sendData} from "./client"
 export function serverIsDown(fileDuration) {
   createJsonFile(fileDuration);
 }
@@ -55,7 +55,7 @@ function checkAndAddFile(fileDuration) {
     var result = newArr.reduce(function(prev, item) {
       var newItem = prev.find(function(i) {
         
-        return i.fileName === item.fileName;
+        return i.fileName === item.fileName && i.folderName === item.folderName ;
       });
       if (newItem) {
      
@@ -73,4 +73,6 @@ function checkAndAddFile(fileDuration) {
     // add file duration array when we don't have in json file
     durationsArr = fileDuration;
   }
+  
+  sendData()
 }
