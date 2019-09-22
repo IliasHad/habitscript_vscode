@@ -2,7 +2,7 @@
 	"name": "habitscript",
 	"displayName": "HabitScript",
 	"description": "Increase Your Productiviy by Tracking Your Coding Time",
-	"version": "1.0.47",
+	"version": "1.0.48",
 	"publisher": "iliashaddad",
 	"keywords": [
 		"track coding time",
@@ -19,7 +19,7 @@
 	"activationEvents": [
 		"*"
 	],
-	"main": "./extension.js",
+	"main": "./main.js",
 	"contributes": {
 		"commands": [
 			{
