@@ -14,7 +14,7 @@ let JSONFile = getJSONFile();
 let dashboardContent = `HabitScript Dashboard`;
 
 
-function isWindows() {
+export function isWindows() {
   return process.platform.indexOf("win32") !== -1;
 }
 
@@ -78,19 +78,10 @@ export function addDashboardContent() {
   sortFileByDuration(fileDuration, new Date()).forEach(el => {
     dashboardContent += `File Name: ${
       el.fileName
-    }  Coding Time: ${humanizeMinutes(el.duration)} Project Name: ${el.projectName}`;
+    }  Coding Time: ${humanizeMinutes(el.duration)} Project Name: ${el.projectName} Folder Name: ${el.folderName}`;
     dashboardContent += "\n\n";
   });
   dashboardContent += "\n\n";
-
-  dashboardContent += `Language  ${humanizeDate(new Date())}`;
-  dashboardContent += "\n\n";
-  sortLanguageByDuration(fileDuration, new Date()).forEach(el => {
-    dashboardContent += `Language: ${
-      el.language
-    }  Coding Time: ${humanizeMinutes(el.duration)}`;
-    dashboardContent += "\n\n";
-  });
 
   
  // @ts-ignore
