@@ -6,11 +6,24 @@ const fs = require("fs");
 import { serverIsDown } from "./offline";
 import { getJSONFile } from "./dashboard";
 import { getApikey } from "./login";
+import {isWindows} from "./dashboard"
 
 
+const os = require("os");
 
-  
-let apiKey;
+let settingsFile = getSettingsFile()
+
+function getSettingsFile() {
+  const homedir = os.homedir();
+  let softwareDataDir = homedir;
+  if (isWindows()) {
+    softwareDataDir += "\\habitScriptSettings.json";
+  } else {
+    softwareDataDir += "/habitScriptSettings.json";
+  }
+  return softwareDataDir;
+}
+
 let lastSendingData = Date.now();
 export function isBestTimeToSend(now) {
  
@@ -21,18 +34,23 @@ export function sendData() {
   let file = getJSONFile();
   let fileDuration = [];
   let data = fs.readFileSync(file);
-  
+  let settingsData = fs.readFileSync(settingsFile);
+
   // @ts-ignore
   fileDuration = JSON.parse(data);
 
   let url = `${apiEndpoint}duration`;
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
+console.log(fileDuration)
   console.log(url, new Date().toISOString());
-
+  // @ts-ignore
+  let settingsDataObject = JSON.parse(settingsData)
+    // @ts-ignore
+  console.log(settingsDataObject.apiKey)
   let body = {
     fileDuration,
-    apiKey:""
+    apiKey:settingsDataObject.apiKey,
+    timeZone
   };
   async function sendPost() {
     // @ts-ignore
@@ -58,7 +76,7 @@ export function sendData() {
 }
 
 // Check API Is Valid
-export function checkApi() {
+export function checkApi(apiKey) {
   console.log("CHeck Api");
 
   let url = `${apiEndpoint}duration/u/${apiKey}`;
@@ -81,7 +99,11 @@ export function checkApi() {
     .then(resData => {
       console.log(resData);
       if (resData !== undefined) {
-        vscode.window.showInformationMessage(
+        fs.writeFile(settingsFile, JSON.stringify({apiKey}), err => {
+          if (err) console.log(err);
+          console.log("The file has been saved!");
+        });
+                vscode.window.showInformationMessage(
           "Congratulations, HabitScript is now active!"
         );
       } else {
