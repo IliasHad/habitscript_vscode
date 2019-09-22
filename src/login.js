@@ -2,13 +2,7 @@ const vscode = require("vscode");
 import { checkApi } from "./client";
 
 export function isLogin(context) {
-  function updateState(api) {
-    return context.globalState.update("apiKey", api);
-  }
-
-  function getState() {
-    return context.globalState.get("apiKey");
-  }
+ 
   getApikey();
 }
 // Show  Input Box to get API Key
@@ -24,7 +18,7 @@ export function getApikey() {
   vscode.window.showInputBox(promptOptions).then(API => {
     if (API !== null || API !== undefined) {
       //    context.globalState.update("apiKey", API);
-      checkApi();
+      checkApi(API);
     } else {
       vscode.window.showInformationMessage("Oops, API Key is not valid!");
 
