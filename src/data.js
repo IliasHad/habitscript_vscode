@@ -12,6 +12,7 @@ momentDurationFormatSetup(moment);
 
 // Gloabl Variables
 let lastFileName;
+let lastFolderName
 let todayCodingTime = 0;
 let lastTimeSaved = 0;
 let JSONFile = getJSONFile();
@@ -48,6 +49,7 @@ const getProjectName = () => {
     let doc = editor.document;
     if (doc) {
       let file = doc.fileName;
+      
       let uri = vscode.Uri.file(file);
       let workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
       let projectName = workspaceFolder.name;
@@ -69,7 +71,14 @@ function getFileName(doc) {
   const fileName = path.basename(filePath);
   return fileName;
 }
-
+// Get File Name When Saved Document
+function getFolderName(doc) {
+  const filePath = doc.fileName;
+  const folderName = path.dirname(filePath);
+  const folderPath = folderName.split("\\")
+  //console.log(folderPath[folderPath.length-1])
+  return folderPath[folderPath.length-1]
+}
 export function showTodayTime() {
   statusBar.text = `Today ${humanizeMinutes(todayCodingTime)}  |  🎉 ${getKarma(
     todayCodingTime
@@ -85,17 +94,19 @@ export function onSave(isSaved, doc) {
     lastTimeSaved = Date.now();
   }
 
+
   const fileName = getFileName(doc);
   const projectName = getProjectName();
   const language = getLanguage(doc);
-
+  const folderName= getFolderName(doc)
   lastFileName = fileName;
+  lastFolderName = folderName
 
   // Check If Last Saved File Excists in FilDuration Array
 
   let isExcited = false;
   fileDuration.forEach(el => {
-    if (el.fileName === lastFileName) {
+    if (el.fileName === lastFileName && el.folderName === lastFolderName) {
       isExcited = true;
     }
   });
@@ -105,7 +116,7 @@ export function onSave(isSaved, doc) {
     // @ts-ignore
     if (fileDuration.length > 0 && isExcited === true) {
       fileDuration.forEach(el => {
-        if (el.fileName === lastFileName) {
+        if (el.fileName === lastFileName && el.folderName === lastFolderName) {
           const pastDurations = el.duration;
           const newDurations = pastDurations + (Date.now() - lastTimeSaved);
           el.duration = newDurations;
@@ -127,7 +138,8 @@ export function onSave(isSaved, doc) {
         duration: Date.now() - lastTimeSaved,
         created_at: new Date().toISOString(),
         projectName,
-        language
+        language,
+        folderName
       });
     }
 
@@ -138,7 +150,8 @@ export function onSave(isSaved, doc) {
         duration: Date.now() - lastTimeSaved,
         created_at: new Date().toISOString(),
         projectName,
-        language
+        language,
+        folderName
       });
     }
 
