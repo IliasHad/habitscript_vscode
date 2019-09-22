@@ -5,6 +5,7 @@ momentDurationFormatSetup(moment);
 export function getKarma(totalCodingTime) {
   let codingPoints = 0;
 
+  console.log('Today Coding Time', totalCodingTime)
   // Convert Coding Time From Secondes to Hours
   let CodingTimeInMinutes = convertMsToMinutes(totalCodingTime);
 
@@ -17,5 +18,6 @@ export function getKarma(totalCodingTime) {
   return codingPoints;
 }
 function convertMsToMinutes(ms) {
-  return Math.round(ms / 60000);
+  console.log(ms)
+  return Math.round(parseInt(ms) / 60000);
 }
