@@ -19,7 +19,7 @@
 	"activationEvents": [
 		"*"
 	],
-	"main": "./main.js",
+	"main": "./extension.js",
 	"contributes": {
 		"commands": [
 			{

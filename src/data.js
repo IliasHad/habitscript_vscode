@@ -2,7 +2,7 @@ const vscode = require("vscode");
 let path = require("path");
 const fs = require("fs");
 import { getJSONFile, getDateFormat,   addDashboardContent } from "./dashboard";
-import { statusBar, fileDuration } from "./main";
+import { statusBar, fileDuration } from "./extension";
 import { sendData, isBestTimeToSend } from "./client";
 import { createJsonFile } from "./offline";
 import { getKarma } from "./karma";
