@@ -11,7 +11,7 @@ let file = getJSONFile();
 
 export function createJsonFile(fileDuration) {
   console.log("Creating JSON File...");
-  fs.exists(file, function(exists) {
+  let exists = fs.existsSync(file);
     if (exists) {
       let data = fs.readFileSync(file);
 
@@ -32,7 +32,7 @@ export function createJsonFile(fileDuration) {
         console.log("The file has been saved!");
       });
     }
-  });
+  
 }
 
 function checkAndAddFile(fileDuration) {
