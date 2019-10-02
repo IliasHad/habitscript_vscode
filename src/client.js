@@ -41,7 +41,7 @@ export function sendData() {
 
   let url = `${apiEndpoint}duration`;
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-console.log(fileDuration)
+//console.log(fileDuration)
   console.log(url, new Date().toISOString());
   // @ts-ignore
   let settingsDataObject = JSON.parse(settingsData)

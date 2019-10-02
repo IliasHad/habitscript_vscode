@@ -1,29 +1,28 @@
 const fs = require("fs");
 import { getJSONFile, getDateFormat } from "./dashboard";
 import {sendData} from "./client"
+import {getTodayCodingTime, showTodayTime} from "./data"
 export function serverIsDown(fileDuration) {
   createJsonFile(fileDuration);
 }
 
 // When Connection Isn't Available we Store Data in JSON File
-let durationsArr = [];
 let file = getJSONFile();
 
 export function createJsonFile(fileDuration) {
   console.log("Creating JSON File...");
   let exists = fs.existsSync(file);
+
+  console.log("JSON file Excists", exists)
     if (exists) {
       let data = fs.readFileSync(file);
 
       // @ts-ignore
-      durationsArr = JSON.parse(data);
+     let durationsArr = JSON.parse(data);
 
-      checkAndAddFile(fileDuration);
+      checkAndAddFile(fileDuration, durationsArr);
 
-      fs.writeFile(file, JSON.stringify(durationsArr), err => {
-        if (err) console.log(err);
-        console.log("The file has been saved!");
-      });
+     
     }
     // If json doesn't exicst
     else {
@@ -35,7 +34,7 @@ export function createJsonFile(fileDuration) {
   
 }
 
-function checkAndAddFile(fileDuration) {
+function checkAndAddFile(fileDuration, durationsArr) {
   console.log("Checking File....");
 
   // Intiliase empty array
@@ -55,7 +54,7 @@ function checkAndAddFile(fileDuration) {
     var result = newArr.reduce(function(prev, item) {
       var newItem = prev.find(function(i) {
         
-        return i.fileName === item.fileName && i.folderName === item.folderName ;
+        return i.fileName === item.fileName && i.folderName === item.folderName && getDateFormat(i.created_at) === getDateFormat(item.created_at);
       });
       if (newItem) {
      
@@ -67,12 +66,20 @@ function checkAndAddFile(fileDuration) {
       return prev;
     }, []);
 
-    console.log(result);
+    console.log("Offline", result.length)
+   console.log(result);
     durationsArr = result;
   } else {
     // add file duration array when we don't have in json file
+
+    console.log('No JSON File')
     durationsArr = fileDuration;
   }
-  
-  sendData()
+  fs.writeFile(file, JSON.stringify(durationsArr), err => {
+    if (err) console.log(err);
+    console.log("The file has been saved!");
+  });
+ // sendData()
+  getTodayCodingTime();
+  showTodayTime();
 }

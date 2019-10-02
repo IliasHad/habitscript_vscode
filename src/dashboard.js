@@ -53,13 +53,13 @@ export function addDashboardContent() {
     // @ts-ignore
     fileDuration = JSON.parse(data);
 
-   console.log(fileDuration)
+  // console.log(fileDuration)
   dashboardContent += "\n\n";
-  dashboardContent += `Today Coding Time:  ${humanizeMinutes(
+  /*dashboardContent += `Today Coding Time:  ${humanizeMinutes(
     getTodayCodingTime(fileDuration)
-  )}`;
+  )}`;*/
   dashboardContent += "\n\n";
-  dashboardContent += `Earned Karmas:  ${getKarma(fileDuration)}`;
+  //dashboardContent += `Earned Karmas:  ${getKarma(fileDuration)}`;
   dashboardContent += "\n\n";
   dashboardContent += `Most Productive Day:  ${humanizeDate(
     getMostProductiveDay(fileDuration)
