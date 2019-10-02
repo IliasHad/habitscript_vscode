@@ -13,7 +13,21 @@ const os = require("os");
 
 let settingsFile = getSettingsFile()
 
-function getSettingsFile() {
+export function checkIfUserHasLogged() {
+
+  let isUserLogged = false
+
+ // Check if file exist
+fs.exists(settingsFile, function (file) {
+  if (file) {
+    isUserLogged = true
+
+  }
+ 
+})
+return isUserLogged
+}
+export function getSettingsFile() {
   const homedir = os.homedir();
   let softwareDataDir = homedir;
   if (isWindows()) {

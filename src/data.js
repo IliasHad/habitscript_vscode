@@ -3,7 +3,7 @@ let path = require("path");
 const fs = require("fs");
 import { getJSONFile, getDateFormat,   addDashboardContent } from "./dashboard";
 import { statusBar, fileDuration } from "./extension";
-import { sendData, isBestTimeToSend } from "./client";
+import { sendData, checkIfUserHasLogged } from "./client";
 import { createJsonFile } from "./offline";
 import { getKarma } from "./karma";
 const moment = require("moment");
@@ -15,7 +15,7 @@ let lastFileName;
 let lastFolderName;
 let lastProjectName;
 let todayCodingTime = 0;
-let lastTimeSaved = 0;
+let lastTimeSaved = Date.now();
 let JSONFile = getJSONFile();
 
 let fileDurationJSON = [];
@@ -91,19 +91,14 @@ export function humanizeMinutes(ms) {
 }
 
 export function onSave(isSaved, doc) {
-  if (lastTimeSaved === 0) {
-    lastTimeSaved = Date.now();
-  }
-
-
+ 
   const fileName = getFileName(doc);
   const projectName = getProjectName();
   const language = getLanguage(doc);
   const folderName= getFolderName(doc)
-  lastFileName = fileName;
-  lastFolderName = folderName
-  lastProjectName = projectName;
+ 
 
+ 
   // Check If Last Saved File Excists in FilDuration Array
 
   let isExcited = fileDuration.filter(el => {
@@ -167,12 +162,20 @@ export function onSave(isSaved, doc) {
    
 
     // Sending Data to Server but after user enter the api key
-    /*if (isBestTimeToSend(now)) {
+    if (checkIfUserHasLogged()) {
       sendData();
-    }*/
+    }
+
+    
     addDashboardContent()
 
-  }
 
-  lastTimeSaved = Date.now();
+   
+
+  }
+  lastTimeSaved = Date.now()
+  lastFileName = fileName;
+  lastFolderName = folderName
+  lastProjectName = projectName;
+
 }

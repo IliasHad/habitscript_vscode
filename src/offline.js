@@ -8,7 +8,7 @@ export function serverIsDown(fileDuration) {
 
 // When Connection Isn't Available we Store Data in JSON File
 let file = getJSONFile();
-
+let codingActivity = []
 export function createJsonFile(fileDuration) {
   console.log("Creating JSON File...");
   let exists = fs.existsSync(file);
@@ -22,13 +22,18 @@ export function createJsonFile(fileDuration) {
 
       checkAndAddFile(fileDuration, durationsArr);
 
-     
+
+     console.log(codingActivity)
+      fs.writeFile(file, JSON.stringify(codingActivity), err => {
+        if (err) console.log(err);
+        console.log("The file has been saved!");
+      });
     }
     // If json doesn't exicst
     else {
       fs.writeFile(file, JSON.stringify(fileDuration), err => {
         if (err) throw err;
-        console.log("The file has been saved!");
+        console.log("The file has been saved! When doesn't exicst");
       });
     }
   
@@ -54,7 +59,7 @@ function checkAndAddFile(fileDuration, durationsArr) {
     var result = newArr.reduce(function(prev, item) {
       var newItem = prev.find(function(i) {
         
-        return i.fileName === item.fileName && i.folderName === item.folderName && getDateFormat(i.created_at) === getDateFormat(item.created_at);
+        return i.fileName === item.fileName && i.folderName === item.folderName ;
       });
       if (newItem) {
      
@@ -66,19 +71,13 @@ function checkAndAddFile(fileDuration, durationsArr) {
       return prev;
     }, []);
 
-    console.log("Offline", result.length)
-   console.log(result);
-    durationsArr = result;
+ codingActivity = result;
+
   } else {
     // add file duration array when we don't have in json file
-
-    console.log('No JSON File')
-    durationsArr = fileDuration;
+    codingActivity = fileDuration;
   }
-  fs.writeFile(file, JSON.stringify(durationsArr), err => {
-    if (err) console.log(err);
-    console.log("The file has been saved!");
-  });
+  
  // sendData()
   getTodayCodingTime();
   showTodayTime();

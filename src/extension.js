@@ -22,7 +22,7 @@ export function activate(context) {
   showTodayTime();
   addDashboardContent()
   
-  // When You Type Anything
+  // When You Change Anything
   vscode.workspace.onDidChangeTextDocument(doc => {
     onSave(false, doc);
   });

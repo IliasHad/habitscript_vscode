@@ -133,7 +133,7 @@ function getTodayCodingTime(duration) {
 
 // Get Most Productive Day in the Week
 function getMostProductiveDay(durations) {
-  console.log(durations)
+ // console.log(durations)
   const highest = durations.sort((a, b) => b.duration - a.duration)[0];
 
   return highest.created_at;
@@ -151,7 +151,7 @@ function getMostProductivTimeOfeDay(durations) {
 
 //Get Most Used Programming Language All Time
 function getMostUsedLanguage(durations, date) {
-  console.log(durations)
+ // console.log(durations)
   const highest = durations.sort((a, b) => b.duration - a.duration)[0];
 
   return highest.language;
@@ -159,7 +159,7 @@ function getMostUsedLanguage(durations, date) {
 
 // Sort File Name By Duration
 function sortFileByDuration(durations, date) {
-  console.log(durations)
+ // console.log(durations)
 
   const highest = durations.sort((a, b) => b.duration - a.duration);
 
