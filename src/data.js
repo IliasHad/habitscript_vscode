@@ -161,10 +161,11 @@ export function onSave(isSaved, doc) {
     let now = Date.now();
    
 
+console.log(checkIfUserHasLogged(),"Checking User")
     // Sending Data to Server but after user enter the api key
-    if (checkIfUserHasLogged()) {
-      sendData();
-    }
+
+checkIfUserHasLogged()
+   
 
     
     addDashboardContent()
@@ -173,9 +174,11 @@ export function onSave(isSaved, doc) {
    
 
   }
+  
   lastTimeSaved = Date.now()
   lastFileName = fileName;
   lastFolderName = folderName
   lastProjectName = projectName;
+  console.log(lastTimeSaved, lastFileName, lastFolderName, lastProjectName)
 
 }

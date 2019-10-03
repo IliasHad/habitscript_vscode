@@ -19,13 +19,17 @@ export function checkIfUserHasLogged() {
 
  // Check if file exist
 fs.exists(settingsFile, function (file) {
+  console.log(file)
   if (file) {
-    isUserLogged = true
+  isUserLogged = true
+
+  sendData()
+
 
   }
  
+ 
 })
-return isUserLogged
 }
 export function getSettingsFile() {
   const homedir = os.homedir();

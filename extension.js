@@ -328,10 +328,11 @@ function onSave(isSaved, doc) {
     let now = Date.now();
    
 
+console.log(Object(_client__WEBPACK_IMPORTED_MODULE_2__["checkIfUserHasLogged"])(),"Checking User")
     // Sending Data to Server but after user enter the api key
-    if (Object(_client__WEBPACK_IMPORTED_MODULE_2__["checkIfUserHasLogged"])()) {
-      Object(_client__WEBPACK_IMPORTED_MODULE_2__["sendData"])();
-    }
+
+Object(_client__WEBPACK_IMPORTED_MODULE_2__["checkIfUserHasLogged"])()
+   
 
     
     Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["addDashboardContent"])()
@@ -340,10 +341,12 @@ function onSave(isSaved, doc) {
    
 
   }
+  
   lastTimeSaved = Date.now()
   lastFileName = fileName;
   lastFolderName = folderName
   lastProjectName = projectName;
+  console.log(lastTimeSaved, lastFileName, lastFolderName, lastProjectName)
 
 }
 
@@ -19440,13 +19443,17 @@ function checkIfUserHasLogged() {
 
  // Check if file exist
 fs.exists(settingsFile, function (file) {
+  console.log(file)
   if (file) {
-    isUserLogged = true
+  isUserLogged = true
+
+  sendData()
+
 
   }
  
+ 
 })
-return isUserLogged
 }
 function getSettingsFile() {
   const homedir = os.homedir();
