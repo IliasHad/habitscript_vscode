@@ -1,7 +1,7 @@
 const os = require("os");
 var moment = require("moment");
 
-const { workspace, window, ViewColumn } = require("vscode");
+const { workspace, window, ViewColumn, Uri } = require("vscode");
 import { humanizeMinutes } from "./data";
 import { getKarma } from "./karma";
 const fs = require("fs");
@@ -53,39 +53,36 @@ export function addDashboardContent() {
     // @ts-ignore
     fileDuration = JSON.parse(data);
 
-  // console.log(fileDuration)
+  console.log(fileDuration.length, "Offline Dashboard")
   dashboardContent += "\n\n";
-  /*dashboardContent += `Today Coding Time:  ${humanizeMinutes(
+  dashboardContent += `Today Coding Time:  ${humanizeMinutes(
     getTodayCodingTime(fileDuration)
-  )}`;*/
+  )}`;
   dashboardContent += "\n\n";
-  //dashboardContent += `Earned Karmas:  ${getKarma(fileDuration)}`;
+  dashboardContent += `Earned Karmas:  ${getKarma(getTodayCodingTime(fileDuration))}`;
   dashboardContent += "\n\n";
   dashboardContent += `Most Productive Day:  ${humanizeDate(
     getMostProductiveDay(fileDuration)
   )}`;
   dashboardContent += "\n\n";
-  dashboardContent += `Most Productive Time Of Day:  ${getMostProductivTimeOfeDay(
-    fileDuration
-  )}`;
+ 
   dashboardContent += "\n\n";
   dashboardContent += `Most Used Programming Language:  ${getMostUsedLanguage(
     fileDuration
   )}`;
   dashboardContent += "\n\n";
-  dashboardContent += `File Name  ${humanizeDate(new Date())}`;
   dashboardContent += "\n\n";
   sortFileByDuration(fileDuration, new Date()).forEach(el => {
-    dashboardContent += `File Name: ${
-      el.fileName
-    }  Coding Time: ${humanizeMinutes(el.duration)} Project Name: ${el.projectName} Folder Name: ${el.folderName}`;
+    dashboardContent += "\n\n";
+
+    dashboardContent += `File Path: ${el.projectName}/${el.folderName}/${el.fileName} Coding Time: ${humanizeMinutes(el.duration)}`;
     dashboardContent += "\n\n";
   });
   dashboardContent += "\n\n";
 
   
  // @ts-ignore
- fs.writeFile(file, dashboardContent, "UTF-8", function (err) {
+ fs.writeFile(file, dashboardContent, function (err) {
   if (err) {
   console.log(err)
   }
@@ -94,7 +91,7 @@ export function addDashboardContent() {
   }
   else {
      // @ts-ignore
-   fs.writeFile(file, dashboardContent, "UTF-8", function (err) {
+   fs.writeFile(file, dashboardContent, function (err) {
     if (err) {
     console.log(err)
     }
@@ -213,7 +210,15 @@ function sortLanguageByDuration(durations, day) {
 export function openDashboardFile () {
 
  
+  const filePath = Uri.parse(file)
+ 
+  workspace.openTextDocument(filePath).then(doc => {
 
+    window.showTextDocument(doc, 1, false).then(e => {
+       console.log(e)
+    });
+});
+/*
 
         workspace.openTextDocument(file)
 
@@ -250,7 +255,7 @@ export function openDashboardFile () {
           // only focus if it's not already open
          
    
-
+*/
 }
 
 

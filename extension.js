@@ -122,7 +122,7 @@ function activate(context) {
   Object(_data_js__WEBPACK_IMPORTED_MODULE_0__["showTodayTime"])();
   Object(_dashboard__WEBPACK_IMPORTED_MODULE_2__["addDashboardContent"])()
   
-  // When You Type Anything
+  // When You Change Anything
   vscode.workspace.onDidChangeTextDocument(doc => {
     Object(_data_js__WEBPACK_IMPORTED_MODULE_0__["onSave"])(false, doc);
   });
@@ -182,7 +182,7 @@ let lastFileName;
 let lastFolderName;
 let lastProjectName;
 let todayCodingTime = 0;
-let lastTimeSaved = 0;
+let lastTimeSaved = Date.now();
 let JSONFile = Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getJSONFile"])();
 
 let fileDurationJSON = [];
@@ -258,19 +258,14 @@ function humanizeMinutes(ms) {
 }
 
 function onSave(isSaved, doc) {
-  if (lastTimeSaved === 0) {
-    lastTimeSaved = Date.now();
-  }
-
-
+ 
   const fileName = getFileName(doc);
   const projectName = getProjectName();
   const language = getLanguage(doc);
   const folderName= getFolderName(doc)
-  lastFileName = fileName;
-  lastFolderName = folderName
-  lastProjectName = projectName;
+ 
 
+ 
   // Check If Last Saved File Excists in FilDuration Array
 
   let isExcited = _extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"].filter(el => {
@@ -334,14 +329,22 @@ function onSave(isSaved, doc) {
    
 
     // Sending Data to Server but after user enter the api key
-    /*if (isBestTimeToSend(now)) {
-      sendData();
-    }*/
+    if (Object(_client__WEBPACK_IMPORTED_MODULE_2__["checkIfUserHasLogged"])()) {
+      Object(_client__WEBPACK_IMPORTED_MODULE_2__["sendData"])();
+    }
+
+    
     Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["addDashboardContent"])()
 
-  }
 
-  lastTimeSaved = Date.now();
+   
+
+  }
+  lastTimeSaved = Date.now()
+  lastFileName = fileName;
+  lastFolderName = folderName
+  lastProjectName = projectName;
+
 }
 
 
@@ -375,7 +378,7 @@ __webpack_require__.r(__webpack_exports__);
 const os = __webpack_require__(6);
 var moment = __webpack_require__(7);
 
-const { workspace, window, ViewColumn } = __webpack_require__(1);
+const { workspace, window, ViewColumn, Uri } = __webpack_require__(1);
 
 
 const fs = __webpack_require__(4);
@@ -427,39 +430,36 @@ function addDashboardContent() {
     // @ts-ignore
     fileDuration = JSON.parse(data);
 
-  // console.log(fileDuration)
+  console.log(fileDuration.length, "Offline Dashboard")
   dashboardContent += "\n\n";
-  /*dashboardContent += `Today Coding Time:  ${humanizeMinutes(
+  dashboardContent += `Today Coding Time:  ${Object(_data__WEBPACK_IMPORTED_MODULE_0__["humanizeMinutes"])(
     getTodayCodingTime(fileDuration)
-  )}`;*/
+  )}`;
   dashboardContent += "\n\n";
-  //dashboardContent += `Earned Karmas:  ${getKarma(fileDuration)}`;
+  dashboardContent += `Earned Karmas:  ${Object(_karma__WEBPACK_IMPORTED_MODULE_1__["getKarma"])(getTodayCodingTime(fileDuration))}`;
   dashboardContent += "\n\n";
   dashboardContent += `Most Productive Day:  ${humanizeDate(
     getMostProductiveDay(fileDuration)
   )}`;
   dashboardContent += "\n\n";
-  dashboardContent += `Most Productive Time Of Day:  ${getMostProductivTimeOfeDay(
-    fileDuration
-  )}`;
+ 
   dashboardContent += "\n\n";
   dashboardContent += `Most Used Programming Language:  ${getMostUsedLanguage(
     fileDuration
   )}`;
   dashboardContent += "\n\n";
-  dashboardContent += `File Name  ${humanizeDate(new Date())}`;
   dashboardContent += "\n\n";
   sortFileByDuration(fileDuration, new Date()).forEach(el => {
-    dashboardContent += `File Name: ${
-      el.fileName
-    }  Coding Time: ${Object(_data__WEBPACK_IMPORTED_MODULE_0__["humanizeMinutes"])(el.duration)} Project Name: ${el.projectName} Folder Name: ${el.folderName}`;
+    dashboardContent += "\n\n";
+
+    dashboardContent += `File Path: ${el.projectName}/${el.folderName}/${el.fileName} Coding Time: ${Object(_data__WEBPACK_IMPORTED_MODULE_0__["humanizeMinutes"])(el.duration)}`;
     dashboardContent += "\n\n";
   });
   dashboardContent += "\n\n";
 
   
  // @ts-ignore
- fs.writeFile(file, dashboardContent, "UTF-8", function (err) {
+ fs.writeFile(file, dashboardContent, function (err) {
   if (err) {
   console.log(err)
   }
@@ -468,7 +468,7 @@ function addDashboardContent() {
   }
   else {
      // @ts-ignore
-   fs.writeFile(file, dashboardContent, "UTF-8", function (err) {
+   fs.writeFile(file, dashboardContent, function (err) {
     if (err) {
     console.log(err)
     }
@@ -507,7 +507,7 @@ function getTodayCodingTime(duration) {
 
 // Get Most Productive Day in the Week
 function getMostProductiveDay(durations) {
-  console.log(durations)
+ // console.log(durations)
   const highest = durations.sort((a, b) => b.duration - a.duration)[0];
 
   return highest.created_at;
@@ -525,7 +525,7 @@ function getMostProductivTimeOfeDay(durations) {
 
 //Get Most Used Programming Language All Time
 function getMostUsedLanguage(durations, date) {
-  console.log(durations)
+ // console.log(durations)
   const highest = durations.sort((a, b) => b.duration - a.duration)[0];
 
   return highest.language;
@@ -533,7 +533,7 @@ function getMostUsedLanguage(durations, date) {
 
 // Sort File Name By Duration
 function sortFileByDuration(durations, date) {
-  console.log(durations)
+ // console.log(durations)
 
   const highest = durations.sort((a, b) => b.duration - a.duration);
 
@@ -587,7 +587,15 @@ function sortLanguageByDuration(durations, day) {
 function openDashboardFile () {
 
  
+  const filePath = Uri.parse(file)
+ 
+  workspace.openTextDocument(filePath).then(doc => {
 
+    window.showTextDocument(doc, 1, false).then(e => {
+       console.log(e)
+    });
+});
+/*
 
         workspace.openTextDocument(file)
 
@@ -624,7 +632,7 @@ function openDashboardFile () {
           // only focus if it's not already open
          
    
-
+*/
 }
 
 
@@ -19401,6 +19409,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkIfUserHasLogged", function() { return checkIfUserHasLogged; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSettingsFile", function() { return getSettingsFile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isBestTimeToSend", function() { return isBestTimeToSend; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendData", function() { return sendData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkApi", function() { return checkApi; });
@@ -19424,6 +19434,20 @@ const os = __webpack_require__(6);
 
 let settingsFile = getSettingsFile()
 
+function checkIfUserHasLogged() {
+
+  let isUserLogged = false
+
+ // Check if file exist
+fs.exists(settingsFile, function (file) {
+  if (file) {
+    isUserLogged = true
+
+  }
+ 
+})
+return isUserLogged
+}
 function getSettingsFile() {
   const homedir = os.homedir();
   let softwareDataDir = homedir;
@@ -21243,7 +21267,7 @@ function serverIsDown(fileDuration) {
 
 // When Connection Isn't Available we Store Data in JSON File
 let file = Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getJSONFile"])();
-
+let codingActivity = []
 function createJsonFile(fileDuration) {
   console.log("Creating JSON File...");
   let exists = fs.existsSync(file);
@@ -21257,13 +21281,18 @@ function createJsonFile(fileDuration) {
 
       checkAndAddFile(fileDuration, durationsArr);
 
-     
+
+     console.log(codingActivity)
+      fs.writeFile(file, JSON.stringify(codingActivity), err => {
+        if (err) console.log(err);
+        console.log("The file has been saved!");
+      });
     }
     // If json doesn't exicst
     else {
       fs.writeFile(file, JSON.stringify(fileDuration), err => {
         if (err) throw err;
-        console.log("The file has been saved!");
+        console.log("The file has been saved! When doesn't exicst");
       });
     }
   
@@ -21289,7 +21318,7 @@ function checkAndAddFile(fileDuration, durationsArr) {
     var result = newArr.reduce(function(prev, item) {
       var newItem = prev.find(function(i) {
         
-        return i.fileName === item.fileName && i.folderName === item.folderName && Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(i.created_at) === Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(item.created_at);
+        return i.fileName === item.fileName && i.folderName === item.folderName ;
       });
       if (newItem) {
      
@@ -21301,19 +21330,13 @@ function checkAndAddFile(fileDuration, durationsArr) {
       return prev;
     }, []);
 
-    console.log("Offline", result.length)
-   console.log(result);
-    durationsArr = result;
+ codingActivity = result;
+
   } else {
     // add file duration array when we don't have in json file
-
-    console.log('No JSON File')
-    durationsArr = fileDuration;
+    codingActivity = fileDuration;
   }
-  fs.writeFile(file, JSON.stringify(durationsArr), err => {
-    if (err) console.log(err);
-    console.log("The file has been saved!");
-  });
+  
  // sendData()
   Object(_data__WEBPACK_IMPORTED_MODULE_2__["getTodayCodingTime"])();
   Object(_data__WEBPACK_IMPORTED_MODULE_2__["showTodayTime"])();
