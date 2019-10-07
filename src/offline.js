@@ -1,7 +1,7 @@
 const fs = require("fs");
-import { getJSONFile, getDateFormat } from "./dashboard";
+import { getJSONFile, getDateFormat} from "./dashboard";
 import {sendData} from "./client"
-import {getTodayCodingTime, showTodayTime} from "./data"
+import {getTodayCodingTime, showTodayTime, getHours} from "./data"
 export function serverIsDown(fileDuration) {
   createJsonFile(fileDuration);
 }
@@ -59,7 +59,8 @@ function checkAndAddFile(fileDuration, durationsArr) {
     var result = newArr.reduce(function(prev, item) {
       var newItem = prev.find(function(i) {
         
-        return i.fileName === item.fileName && i.folderName === item.folderName ;
+        return i.fileName === item.fileName && i.folderName === item.folderName && i.projectName === item.projectName   && getDateFormat(item.created_at) === getDateFormat(i.created_at) &&  getHours(item.created_at) ===  getHours(i.created_at)
+
       });
       if (newItem) {
      

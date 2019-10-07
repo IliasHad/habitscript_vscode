@@ -17,6 +17,7 @@ let lastProjectName;
 let todayCodingTime = 0;
 let lastTimeSaved = Date.now();
 let JSONFile = getJSONFile();
+let changeTime = 0;
 
 let fileDurationJSON = [];
 
@@ -90,19 +91,30 @@ export function humanizeMinutes(ms) {
   return moment.duration(ms, "milliseconds").format("h [hrs], m [min]");
 }
 
+export function getHours(date) {
+  return moment(date).format("hh");
+}
 export function onSave(isSaved, doc) {
  
+
+  changeTime += Date.now() - lastTimeSaved
+
+  console.log("Change Time", changeTime, Date.now() - lastTimeSaved)
+  lastTimeSaved = Date.now()
+
   const fileName = getFileName(doc);
   const projectName = getProjectName();
   const language = getLanguage(doc);
-  const folderName= getFolderName(doc)
- 
+  const folderName= getFolderName(doc);
 
+ 
  
   // Check If Last Saved File Excists in FilDuration Array
 
   let isExcited = fileDuration.filter(el => {
-    return el.fileName === lastFileName && el.folderName === lastFolderName && getDateFormat(el.created_at) === getDateFormat(new Date()) && el.projectName === lastProjectName
+
+    console.log(getHours(el.created_at), getHours(new Date()))
+    return el.fileName === lastFileName && el.folderName === lastFolderName && getDateFormat(el.created_at) === getDateFormat(new Date()) && el.projectName === lastProjectName && getHours(el.created_at) === getHours(new Date())
    
   });
 
@@ -118,16 +130,16 @@ export function onSave(isSaved, doc) {
     
 
       var foundIndex = fileDuration.findIndex(el => {
-        return el.fileName === lastFileName && el.folderName === lastFolderName && getDateFormat(el.created_at) === getDateFormat(new Date()) && el.projectName === lastProjectName
+        return el.fileName === lastFileName && el.folderName === lastFolderName && getDateFormat(el.created_at) === getDateFormat(new Date()) && el.projectName === lastProjectName && getHours(el.created_at) === getHours(new Date())
        
       });
 
      console.log("Index Of Founded Item",foundIndex)
      console.log(fileDuration[foundIndex])
           const pastDurations = fileDuration[foundIndex].duration;
-          const newDurations = pastDurations + (Date.now() - lastTimeSaved);
+          const newDurations = pastDurations + changeTime
           fileDuration[foundIndex].duration = newDurations;
-          fileDuration[foundIndex].created_at = new Date().toISOString();
+          changeTime = 0
         
       
     }
@@ -138,17 +150,20 @@ export function onSave(isSaved, doc) {
 
     // @ts-ignore
    
+    
 
     // Check if array is  empty and fileName and lastFilename are the same or aren't the same
     else {
       fileDuration.push({
         fileName,
-        duration: Date.now() - lastTimeSaved,
+        duration: changeTime,
         created_at: new Date().toISOString(),
         projectName,
         language,
         folderName
       });
+
+      changeTime = 0
     }
 
     //	console.log(fileDuration)
@@ -174,8 +189,7 @@ checkIfUserHasLogged()
    
 
   }
-  
-  lastTimeSaved = Date.now()
+
   lastFileName = fileName;
   lastFolderName = folderName
   lastProjectName = projectName;

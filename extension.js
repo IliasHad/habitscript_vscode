@@ -114,6 +114,7 @@ let fileDuration = [];
  * @param {vscode.ExtensionContext} context
  */
 
+
 function activate(context) {
   statusBar.text = "Start Tracking...";
   statusBar.show();
@@ -159,6 +160,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTodayCodingTime", function() { return getTodayCodingTime; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showTodayTime", function() { return showTodayTime; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "humanizeMinutes", function() { return humanizeMinutes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getHours", function() { return getHours; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onSave", function() { return onSave; });
 /* harmony import */ var _dashboard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 /* harmony import */ var _extension__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(0);
@@ -184,6 +186,7 @@ let lastProjectName;
 let todayCodingTime = 0;
 let lastTimeSaved = Date.now();
 let JSONFile = Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getJSONFile"])();
+let changeTime = 0;
 
 let fileDurationJSON = [];
 
@@ -257,19 +260,30 @@ function humanizeMinutes(ms) {
   return moment.duration(ms, "milliseconds").format("h [hrs], m [min]");
 }
 
+function getHours(date) {
+  return moment(date).format("hh");
+}
 function onSave(isSaved, doc) {
  
+
+  changeTime += Date.now() - lastTimeSaved
+
+  console.log("Change Time", changeTime, Date.now() - lastTimeSaved)
+  lastTimeSaved = Date.now()
+
   const fileName = getFileName(doc);
   const projectName = getProjectName();
   const language = getLanguage(doc);
-  const folderName= getFolderName(doc)
- 
+  const folderName= getFolderName(doc);
 
+ 
  
   // Check If Last Saved File Excists in FilDuration Array
 
   let isExcited = _extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"].filter(el => {
-    return el.fileName === lastFileName && el.folderName === lastFolderName && Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(el.created_at) === Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(new Date()) && el.projectName === lastProjectName
+
+    console.log(getHours(el.created_at), getHours(new Date()))
+    return el.fileName === lastFileName && el.folderName === lastFolderName && Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(el.created_at) === Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(new Date()) && el.projectName === lastProjectName && getHours(el.created_at) === getHours(new Date())
    
   });
 
@@ -285,16 +299,16 @@ function onSave(isSaved, doc) {
     
 
       var foundIndex = _extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"].findIndex(el => {
-        return el.fileName === lastFileName && el.folderName === lastFolderName && Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(el.created_at) === Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(new Date()) && el.projectName === lastProjectName
+        return el.fileName === lastFileName && el.folderName === lastFolderName && Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(el.created_at) === Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(new Date()) && el.projectName === lastProjectName && getHours(el.created_at) === getHours(new Date())
        
       });
 
      console.log("Index Of Founded Item",foundIndex)
      console.log(_extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"][foundIndex])
           const pastDurations = _extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"][foundIndex].duration;
-          const newDurations = pastDurations + (Date.now() - lastTimeSaved);
+          const newDurations = pastDurations + changeTime
           _extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"][foundIndex].duration = newDurations;
-          _extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"][foundIndex].created_at = new Date().toISOString();
+          changeTime = 0
         
       
     }
@@ -305,17 +319,20 @@ function onSave(isSaved, doc) {
 
     // @ts-ignore
    
+    
 
     // Check if array is  empty and fileName and lastFilename are the same or aren't the same
     else {
       _extension__WEBPACK_IMPORTED_MODULE_1__["fileDuration"].push({
         fileName,
-        duration: Date.now() - lastTimeSaved,
+        duration: changeTime,
         created_at: new Date().toISOString(),
         projectName,
         language,
         folderName
       });
+
+      changeTime = 0
     }
 
     //	console.log(fileDuration)
@@ -341,8 +358,7 @@ Object(_client__WEBPACK_IMPORTED_MODULE_2__["checkIfUserHasLogged"])()
    
 
   }
-  
-  lastTimeSaved = Date.now()
+
   lastFileName = fileName;
   lastFolderName = folderName
   lastProjectName = projectName;
@@ -508,13 +524,6 @@ function getTodayCodingTime(duration) {
   return todayCodingTime;
 }
 
-// Get Most Productive Day in the Week
-function getMostProductiveDay(durations) {
- // console.log(durations)
-  const highest = durations.sort((a, b) => b.duration - a.duration)[0];
-
-  return highest.created_at;
-}
 
 // Get Most Productive Time Of Day
 function getMostProductivTimeOfeDay(durations) {
@@ -542,49 +551,32 @@ function sortFileByDuration(durations, date) {
 
   return highest;
 }
-function sortLanguageByDuration(durations, day) {
 
-  let array = []
-  const date = durations.filter(el => getDateFormat(el.created_at) === getDateFormat(day))
+// Get Week Dates By Date
+function getWeekByDate(date) {
+  
+  let curr = date 
+let week = []
 
-  /*
-  date.reduce((prev, item )=> {
-
-    console.log(prev.language, item.language)
-
-    if(prev.language === item.language) {
-
-      const newDuration = prev.duration + item.duration
-      item.duration = newDuration
-      console.log(newDuration)
-      array.push({
-        fileName: item.fileNmae,
-        duration: newDuration,
-        language: item.language,
-        created_at: item.created_at,
-        projectName: item.projectName
-      })
-    }
-
-    else {
-      array.push({
-        fileName: item.fileNmae,
-        duration: item.duration,
-        language: item.language,
-        created_at: item.created_at,
-        projectName: item.projectName
-      })
-    }
-    return item
-  })
- */
-  const highest = date.sort((a, b) => b.duration - a.duration);
-
-  return highest;
+for (let i = 1; i <= 7; i++) {
+  let first = curr.getDate() - curr.getDay() + i 
+  let day = new Date(curr.setDate(first)).toISOString().slice(0, 10)
+  week.push(day)
 }
+return week
+}
+// Get Most Productive Day in the Week
+function getMostProductiveDay(durations) {
+ 
+  const weekDates = getWeekByDate(new Date)
+  const weekActivity = durations.filter((el => {
+   return  new Date(el.created_at).getTime() >= new Date(weekDates[0]).getTime() &&    new Date(el.created_at).getTime() <= new Date(weekDates[weekDates.length-1]).getTime()
+  }))
+  console.log(weekActivity)
+  const highest = weekActivity.sort((a, b) => b.duration - a.duration)[0];
 
-
-
+  return highest.created_at;
+}
 
 
 function openDashboardFile () {
@@ -21325,7 +21317,8 @@ function checkAndAddFile(fileDuration, durationsArr) {
     var result = newArr.reduce(function(prev, item) {
       var newItem = prev.find(function(i) {
         
-        return i.fileName === item.fileName && i.folderName === item.folderName ;
+        return i.fileName === item.fileName && i.folderName === item.folderName && i.projectName === item.projectName   && Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(item.created_at) === Object(_dashboard__WEBPACK_IMPORTED_MODULE_0__["getDateFormat"])(i.created_at) &&  Object(_data__WEBPACK_IMPORTED_MODULE_2__["getHours"])(item.created_at) ===  Object(_data__WEBPACK_IMPORTED_MODULE_2__["getHours"])(i.created_at)
+
       });
       if (newItem) {
      

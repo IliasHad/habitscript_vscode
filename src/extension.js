@@ -14,6 +14,7 @@ export let fileDuration = [];
  * @param {vscode.ExtensionContext} context
  */
 
+
 export function activate(context) {
   statusBar.text = "Start Tracking...";
   statusBar.show();

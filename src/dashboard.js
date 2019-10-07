@@ -128,13 +128,6 @@ function getTodayCodingTime(duration) {
   return todayCodingTime;
 }
 
-// Get Most Productive Day in the Week
-function getMostProductiveDay(durations) {
- // console.log(durations)
-  const highest = durations.sort((a, b) => b.duration - a.duration)[0];
-
-  return highest.created_at;
-}
 
 // Get Most Productive Time Of Day
 function getMostProductivTimeOfeDay(durations) {
@@ -162,49 +155,32 @@ function sortFileByDuration(durations, date) {
 
   return highest;
 }
-function sortLanguageByDuration(durations, day) {
 
-  let array = []
-  const date = durations.filter(el => getDateFormat(el.created_at) === getDateFormat(day))
+// Get Week Dates By Date
+function getWeekByDate(date) {
+  
+  let curr = date 
+let week = []
 
-  /*
-  date.reduce((prev, item )=> {
-
-    console.log(prev.language, item.language)
-
-    if(prev.language === item.language) {
-
-      const newDuration = prev.duration + item.duration
-      item.duration = newDuration
-      console.log(newDuration)
-      array.push({
-        fileName: item.fileNmae,
-        duration: newDuration,
-        language: item.language,
-        created_at: item.created_at,
-        projectName: item.projectName
-      })
-    }
-
-    else {
-      array.push({
-        fileName: item.fileNmae,
-        duration: item.duration,
-        language: item.language,
-        created_at: item.created_at,
-        projectName: item.projectName
-      })
-    }
-    return item
-  })
- */
-  const highest = date.sort((a, b) => b.duration - a.duration);
-
-  return highest;
+for (let i = 1; i <= 7; i++) {
+  let first = curr.getDate() - curr.getDay() + i 
+  let day = new Date(curr.setDate(first)).toISOString().slice(0, 10)
+  week.push(day)
 }
+return week
+}
+// Get Most Productive Day in the Week
+function getMostProductiveDay(durations) {
+ 
+  const weekDates = getWeekByDate(new Date)
+  const weekActivity = durations.filter((el => {
+   return  new Date(el.created_at).getTime() >= new Date(weekDates[0]).getTime() &&    new Date(el.created_at).getTime() <= new Date(weekDates[weekDates.length-1]).getTime()
+  }))
+  console.log(weekActivity)
+  const highest = weekActivity.sort((a, b) => b.duration - a.duration)[0];
 
-
-
+  return highest.created_at;
+}
 
 
 export function openDashboardFile () {
