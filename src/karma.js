@@ -10,10 +10,10 @@ export function getKarma(totalCodingTime) {
   let CodingTimeInMinutes = convertMsToMinutes(totalCodingTime);
 
   console.log("Coding Time In Minutes Jrma",CodingTimeInMinutes);
-  // Every 2 Minutes is counted as 1 Karma
+  // Every One hour is counted as 1 Karma
   //console.log( Math.round(parseInt(CodingTimeInMinutes) * 0.5))
   // @ts-ignore
-  codingPoints = Math.round(parseInt(CodingTimeInMinutes / 60) * 5);
+  codingPoints = Math.round(parseInt(CodingTimeInMinutes / 60) * 1);
 
   console.log("Coding  Points Karma",codingPoints);
 
