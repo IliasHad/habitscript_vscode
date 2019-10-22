@@ -179,7 +179,6 @@ export function onSave(isSaved, doc) {
 console.log(checkIfUserHasLogged(),"Checking User")
     // Sending Data to Server but after user enter the api key
 
-checkIfUserHasLogged()
    
 
     
