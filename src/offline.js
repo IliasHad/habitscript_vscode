@@ -1,7 +1,8 @@
 const fs = require("fs");
 import { getJSONFile, getDateFormat} from "./dashboard";
-import {sendData} from "./client"
 import {getTodayCodingTime, showTodayTime, getHours} from "./data"
+import { sendData, checkIfUserHasLogged } from "./client";
+
 export function serverIsDown(fileDuration) {
   createJsonFile(fileDuration);
 }
@@ -27,6 +28,8 @@ export function createJsonFile(fileDuration) {
       fs.writeFile(file, JSON.stringify(codingActivity), err => {
         if (err) console.log(err);
         console.log("The file has been saved!");
+        checkIfUserHasLogged()
+
       });
     }
     // If json doesn't exicst
