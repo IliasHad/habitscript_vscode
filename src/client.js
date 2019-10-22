@@ -2,6 +2,7 @@ const fetch = require('node-fetch').default
 const apiEndpoint = require("./config");
 import vscode from "vscode"
 const fs = require("fs");
+const path = require("path")
 
 import { serverIsDown } from "./offline";
 import { getJSONFile } from "./dashboard";
@@ -10,21 +11,24 @@ import {isWindows} from "./dashboard"
 
 
 const os = require("os");
-
+let lastSendingData = Date.now()
 let settingsFile = getSettingsFile()
 
 export function checkIfUserHasLogged() {
 
   let isUserLogged = false
 
+  console.log(settingsFile, "File Path")
  // Check if file exist
 fs.exists(settingsFile, function (file) {
   console.log(file)
   if (file) {
   isUserLogged = true
 
-  sendData()
-
+console.log(isBestTimeToSend(),"Best Time To Send")
+ if(isBestTimeToSend(Date.now())) {
+   sendData()
+ }
 
   }
  
@@ -33,19 +37,12 @@ fs.exists(settingsFile, function (file) {
 }
 export function getSettingsFile() {
   const homedir = os.homedir();
-  let softwareDataDir = homedir;
-  if (isWindows()) {
-    softwareDataDir += "\\habitScriptSettings.json";
-  } else {
-    softwareDataDir += "/habitScriptSettings.json";
-  }
-  return softwareDataDir;
+  let settingFilePath = path.join(homedir, "habitScriptSettings.json")
+  return  settingFilePath;
 }
 
-let lastSendingData = Date.now();
 export function isBestTimeToSend(now) {
  
-
   return lastSendingData + 120000 < now;
 }
 export function sendData() {
@@ -70,20 +67,19 @@ export function sendData() {
     apiKey:settingsDataObject.apiKey,
     timeZone
   };
-  async function sendPost() {
     // @ts-ignore
-    let response = await fetch(url, {
+     fetch(url, {
       method: "POST",
       // @ts-ignore
       body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" }
-    });
-    let data = await response.json();
-    return data;
-  }
-
-  sendPost()
+    })
+ 
     .then(data => {
+      data.json()
+     
+    })
+    .then(response => {
       console.log(data);
       lastSendingData = Date.now();
     })
