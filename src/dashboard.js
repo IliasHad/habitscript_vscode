@@ -1,6 +1,6 @@
 const os = require("os");
 var moment = require("moment");
-
+const path = require("path")
 const { workspace, window, ViewColumn, Uri } = require("vscode");
 import { humanizeMinutes } from "./data";
 import { getKarma } from "./karma";
@@ -20,24 +20,14 @@ export function isWindows() {
 
 export function getDashboardFile() {
   const homedir = os.homedir();
-  let softwareDataDir = homedir;
-  if (isWindows()) {
-    softwareDataDir += "\\habitScript.txt";
-  } else {
-    softwareDataDir += "/habitScript.txt";
-  }
-  return softwareDataDir;
+  let dashboardFile  = path.join(homedir, "habitScript.txt")
+ return dashboardFile
 }
 
 export function getJSONFile() {
   const homedir = os.homedir();
-  let softwareDataDir = homedir;
-  if (isWindows()) {
-    softwareDataDir += "\\habitScript.json";
-  } else {
-    softwareDataDir += "/habitScript.json";
-  }
-  return softwareDataDir;
+  let jsonFile = path.join(homedir, "habitScript.json")
+  return jsonFile;
 }
 
 export function addDashboardContent() {
