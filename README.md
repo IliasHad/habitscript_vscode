@@ -59,6 +59,11 @@ Fix Offline Tracking issues
 
 Fix Offline Tracking  issues
 
+### 1.1.9
+
+Fix Offline Tracking  issues
+Fix In-Edior Dashboard  issues
+Fix sending data to the server Tracking  issues
 
 -----------------------------------------------------------------------------------------------------------
 
