@@ -49,7 +49,7 @@
 	},
 	"dependencies": {
 		"lowdb": "^1.0.0",
-		"moment": "^2.24.0",
+		"moment": "^2.29.4",
 		"moment-duration-format": "^2.3.2",
 		"moment-timezone": "^0.5.26",
 		"node-fetch": "^2.6.0",
